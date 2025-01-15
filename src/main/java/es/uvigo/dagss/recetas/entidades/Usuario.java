@@ -46,6 +46,8 @@ public abstract class Usuario implements Serializable {
     private Date ultimoAcceso;
 
 	private Boolean activo = true;
+
+	protected String email;
 	
     public Usuario() {
         this.fechaAlta = Calendar.getInstance().getTime();
@@ -58,11 +60,12 @@ public abstract class Usuario implements Serializable {
         this.tipo = tipo;
     }
 
-    public Usuario(TipoUsuario tipo, String login, String password) {
+    public Usuario(TipoUsuario tipo, String login, String password, String email) {
     	this();
         this.tipo = tipo;
         this.login = login;
         this.password = password;
+		this.email = email;
     }
 
 	public Long getId() {
