@@ -1,7 +1,7 @@
 package es.uvigo.dagss.recetas.entidades;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Calendar;
 
 
