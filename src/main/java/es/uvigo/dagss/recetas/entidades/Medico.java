@@ -2,12 +2,12 @@ package es.uvigo.dagss.recetas.entidades;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
 @Entity
 @DiscriminatorValue(value = "MEDICO")
@@ -24,6 +24,7 @@ public class Medico extends Usuario {
 
     private int telefono;
 
+    @ManyToOne
     private CentroSalud centroSalud;
 
     
@@ -40,6 +41,11 @@ public class Medico extends Usuario {
         this.numeroColegiado = numeroColegiado;
         this.telefono = telefono;
         this.centroSalud = centroSalud;
+    }
+
+    @Override
+    public String toString() {
+        return "Medico{" + "nombre=" + nombre + ", apellidos=" + apellidos + ", centroSalud=" + centroSalud.getNombre() + ", localidad=" + centroSalud.getDireccion().getLocalidad() + ", provincia=" + centroSalud.getDireccion().getProvincia() +", activo=" + super.getActivo() + '}';
     }
 
 }

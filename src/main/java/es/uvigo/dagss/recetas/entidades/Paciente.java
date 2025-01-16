@@ -13,22 +13,6 @@ import jakarta.persistence.TemporalType;
 @DiscriminatorValue(value = "PACIENTE")
 public class Paciente extends Usuario {
 
-	/*
-     * 
-     * nombre
-apellidos
-dni
-número de tarjeta sanitaria (como String)
-número de la Seguridad Social (como String)
-dirección (domicilio, localidad, código postal, provincia)
-teléfono
-e-mail
-fecha de naciemiento
-centro de salud que tiene asignado
-médico que tiene asignado (que a su vez debe estar vinculado al centro de salud anterior)
-activo [true|false]
-     */
-
     private String nombre;
 
     private String apellidos;
@@ -58,7 +42,7 @@ activo [true|false]
         super(TipoUsuario.PACIENTE);        
     }
 
-    public Paciente(String login, String nombre, String apellidos, String dni, String numeroTarjetaSanitaria, String numeroSeguridadSocial, Direccion direccion, int telefono, Date fechaNacimiento, CentroSalud centroSalud, String email) {
+    public Paciente(String login, String nombre, String apellidos, String dni, String numeroTarjetaSanitaria, String numeroSeguridadSocial, Direccion direccion, int telefono, Date fechaNacimiento, CentroSalud centroSalud, Medico medico, String email) {
         super(TipoUsuario.PACIENTE, login, dni, email);
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -68,7 +52,14 @@ activo [true|false]
         this.direccion = direccion;
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
+        this.medico = medico;
         this.centroSalud = centroSalud;
+    }
+
+    @Override
+    public String toString() {
+        // (nombre y apelidos, centro de salud, localidad, provincia, activo [true|false]).
+        return "Paciente{" + "nombre=" + nombre + ", apellidos=" + apellidos + ", centroSalud=" + centroSalud + ", localidad=" + direccion.getLocalidad() + ", provincia=" + direccion.getProvincia() +", activo=" + super.getActivo() + '}';
     }
 
 }
