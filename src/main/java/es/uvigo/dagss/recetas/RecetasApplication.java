@@ -73,6 +73,7 @@ public class RecetasApplication implements CommandLineRunner {
 	}
 
 	private void crearEntidades() {
+
 		Administrador administrador = new Administrador("admin", "admin", "admin", "admin@recetas.com");
 		Administrador administrador2 = new Administrador("admin2", "admin2", "admin2", "admin2@recetas.com");
 		administrador = administradorDAO.save(administrador);
@@ -187,8 +188,6 @@ public class RecetasApplication implements CommandLineRunner {
 
 	public void listarEntidades() {
 		System.out.println("[RECETAS]: -------------------");
-		administradorDAO.findAll().forEach(System.out::println);
-
 		List<Administrador> administradores = administradorDAO.findAll();
 		System.out.println("[RECETAS]: Todos los Administradores");
 		for (Administrador a : administradores) {
@@ -291,6 +290,7 @@ public class RecetasApplication implements CommandLineRunner {
 		medicoDAO.deleteAll();
 		centroSaludDAO.deleteAll();
 		farmaciaDAO.deleteAll();
+		medicamentoDAO.deleteAll();
 	}
 
 }
