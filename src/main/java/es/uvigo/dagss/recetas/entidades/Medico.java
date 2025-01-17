@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

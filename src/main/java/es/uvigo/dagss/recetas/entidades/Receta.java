@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
@@ -33,7 +34,7 @@ public class Receta  implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @ManyToOne
     private Prescripcion prescripcion;
 
     @Temporal(TemporalType.DATE)
@@ -70,7 +71,7 @@ public class Receta  implements Serializable{
         this.estado = EstadoReceta.SERVIDA;
     }
 
-    private void establecerFarmacia(Farmacia farmacia) {
+    private void setFarmacia(Farmacia farmacia) {
         this.farmacia = farmacia;
     }
 }

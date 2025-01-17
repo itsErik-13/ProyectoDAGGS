@@ -63,4 +63,10 @@ public class Prescripcion implements Serializable {
         this.activa = false;
     }
 
+
+    @Override
+    public String toString() {
+        return "Prescripcion{" + "paciente=" + paciente + ", medico=" + medico + ", medicamento=" + medicamento + ", dosisDiaria=" + dosisDiaria + ", indicaciones=" + indicaciones + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", activa=" + activa + '}';
+    }
+
 }

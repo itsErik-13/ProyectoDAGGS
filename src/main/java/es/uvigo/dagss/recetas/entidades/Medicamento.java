@@ -6,14 +6,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 public class Medicamento implements Serializable {
 
     @Id
@@ -32,11 +30,24 @@ public class Medicamento implements Serializable {
 
     private Boolean activo = true;
 
+    public Medicamento(String nombreComercial, String principioActivo, String fabricante, String familia, int numDosis) {
+        this.nombreComercial = nombreComercial;
+        this.principioActivo = principioActivo;
+        this.fabricante = fabricante;
+        this.familia = familia;
+        this.numDosis = numDosis;
+    }
+
     public void activar() {
         this.activo = true;
     }
 
     public void desactivar() {
         this.activo = false;
+    }
+
+    @Override
+    public String toString() {
+        return "Medicamento{" + "nombreComercial=" + nombreComercial + ", principioActivo=" + principioActivo + ", fabricante=" + fabricante + ", familia=" + familia + '}';
     }
 }
