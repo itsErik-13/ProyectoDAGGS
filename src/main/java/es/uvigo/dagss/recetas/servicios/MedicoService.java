@@ -1,6 +1,7 @@
 package es.uvigo.dagss.recetas.servicios;
 
 import java.util.List;
+import java.util.Optional;
 
 import es.uvigo.dagss.recetas.entidades.Medico;
 
@@ -13,11 +14,11 @@ public interface MedicoService {
 
     public List<Medico> listarMedicos();
 
-    public Medico buscarPorId(Long id);
+    public Optional<Medico> buscarPorId(Long id);
 
     public List<Medico> buscarPorNombre(String nombre);
 
-    public List<Medico> buscarPorCentroDeSaludLocalidad(String localidad);
+    public List<Medico> buscarPorCentroSaludLocalidad(String localidad);
     
-    public List<Medico> buscarPorCentroDeSaludId(Long idCentro);
+    public List<Medico> buscarPorCentroSaludId(Long idCentro);
 }

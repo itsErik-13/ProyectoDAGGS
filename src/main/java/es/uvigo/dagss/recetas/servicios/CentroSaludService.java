@@ -1,6 +1,7 @@
 package es.uvigo.dagss.recetas.servicios;
 
 import java.util.List;
+import java.util.Optional;
 
 import es.uvigo.dagss.recetas.entidades.CentroSalud;
 
@@ -17,5 +18,5 @@ public interface CentroSaludService {
 
     public List<CentroSalud> buscarPorLocalidad(String localidad);
 
-    public CentroSalud buscarPorId(Long id);
+    public Optional<CentroSalud> buscarPorId(Long id);
 }

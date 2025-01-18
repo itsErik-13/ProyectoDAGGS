@@ -1,6 +1,7 @@
 package es.uvigo.dagss.recetas.servicios;
 
 import java.util.List;
+import java.util.Optional;
 
 import es.uvigo.dagss.recetas.entidades.Paciente;
 
@@ -11,7 +12,7 @@ public interface PacienteService {
 
     public void eliminar(Paciente paciente);
 
-    public Paciente buscarPorId(Long id);
+    public Optional<Paciente> buscarPorId(Long id);
 
     public List<Paciente> listarPacientes();
 
@@ -19,7 +20,7 @@ public interface PacienteService {
 
     public List<Paciente> buscarPorLocalidad(String localidad);
 
-    public List<Paciente> buscarPorCentroDeSaludId(Long idCentro);
+    public List<Paciente> buscarPorCentroSaludId(Long idCentro);
 
     public List<Paciente> buscarPorMedicoId(Long idMedico);
 }
