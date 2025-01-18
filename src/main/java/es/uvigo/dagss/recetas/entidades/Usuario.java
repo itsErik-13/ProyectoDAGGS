@@ -121,6 +121,14 @@ public abstract class Usuario implements Serializable {
         return activo;
     }
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
     public void setActivo(Boolean activo) {
         this.activo = activo;
     }

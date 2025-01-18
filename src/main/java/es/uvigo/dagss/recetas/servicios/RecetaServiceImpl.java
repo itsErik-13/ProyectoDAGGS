@@ -44,7 +44,7 @@ public class RecetaServiceImpl implements RecetaService {
     @Override
     @Transactional(readOnly = true)
     public List<Receta> buscarPorPacienteId(Long idPaciente) {
-        return recetaDAO.findByPacienteId(idPaciente);
+        return recetaDAO.findByPrescripcionPacienteId(idPaciente);
     }
 
     

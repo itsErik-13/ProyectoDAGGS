@@ -24,13 +24,13 @@ public class CentroSalud implements Serializable{
     @Embedded
     private Direccion direccion;
 
-    private int telefono;
+    private Integer telefono;
 
     private String email;
 
     private Boolean activo = true;
 
-    public CentroSalud(String nombre, Direccion direccion, int telefono, String email) {
+    public CentroSalud(String nombre, Direccion direccion, Integer telefono, String email) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;

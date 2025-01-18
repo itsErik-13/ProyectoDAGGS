@@ -7,5 +7,5 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RecetaDAO extends JpaRepository<Receta, Long> {
-    public List<Receta> findByPacienteId(Long idPaciente);
+    public List<Receta> findByPrescripcionPacienteId(Long idPaciente);
 }
