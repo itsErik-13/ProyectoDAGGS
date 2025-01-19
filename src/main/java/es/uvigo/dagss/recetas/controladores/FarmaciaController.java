@@ -30,7 +30,7 @@ import es.uvigo.dagss.recetas.servicios.FarmaciaService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/api/farmacia", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/farmacias", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*")
 public class FarmaciaController {
     @Autowired
@@ -112,9 +112,9 @@ public class FarmaciaController {
      * @param nombre aproximado de las farmacias a buscar
      * @return Farmacias con el nombre aproxiamdo dado
      */
-    @GetMapping(params = "nombre")
+    @GetMapping(params = "nombreEstablecimiento")
     public ResponseEntity<List<Farmacia>> buscarPorNombre(
-            @RequestParam(name = "nombre", required = true) String nombre) {
+            @RequestParam(name = "nombreEstablecimiento", required = true) String nombre) {
         List<Farmacia> resultado = new ArrayList<>();
         resultado = farmaciaService.buscarPorNombreEstablecimiento(nombre);
         return new ResponseEntity<>(resultado, HttpStatus.OK);

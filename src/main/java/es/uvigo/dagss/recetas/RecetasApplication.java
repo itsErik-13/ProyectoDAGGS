@@ -67,9 +67,9 @@ public class RecetasApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		//  eliminarEntidades();
-		//  crearEntidades();
-		//  listarEntidades();
+		// eliminarEntidades();
+		// crearEntidades();
+		// listarEntidades();
 	}
 
 	private void crearEntidades() {

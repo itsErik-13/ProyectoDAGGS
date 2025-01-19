@@ -8,8 +8,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
 @DiscriminatorValue(value = "PACIENTE")
 public class Paciente extends Usuario {
 
@@ -26,7 +30,7 @@ public class Paciente extends Usuario {
     @Embedded
     private Direccion direccion;
 
-    private int telefono;
+    private Integer telefono;
 
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
@@ -42,7 +46,7 @@ public class Paciente extends Usuario {
         super(TipoUsuario.PACIENTE);        
     }
 
-    public Paciente(String login, String nombre, String apellidos, String dni, String numeroTarjetaSanitaria, String numeroSeguridadSocial, Direccion direccion, int telefono, Date fechaNacimiento, CentroSalud centroSalud, Medico medico, String email) {
+    public Paciente(String login, String nombre, String apellidos, String dni, String numeroTarjetaSanitaria, String numeroSeguridadSocial, Direccion direccion, Integer telefono, Date fechaNacimiento, CentroSalud centroSalud, Medico medico, String email) {
         super(TipoUsuario.PACIENTE, login, dni, email);
         this.nombre = nombre;
         this.apellidos = apellidos;

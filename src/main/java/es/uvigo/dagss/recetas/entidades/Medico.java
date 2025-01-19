@@ -21,7 +21,7 @@ public class Medico extends Usuario {
 
     private String numeroColegiado;
 
-    private int telefono;
+    private Integer telefono;
 
     @ManyToOne
     private CentroSalud centroSalud;
@@ -32,7 +32,7 @@ public class Medico extends Usuario {
     }
 
 
-    public Medico(String login, String nombre, String apellidos, String dni, String numeroColegiado, int telefono, CentroSalud centroSalud, String email) {
+    public Medico(String login, String nombre, String apellidos, String dni, String numeroColegiado, Integer telefono, CentroSalud centroSalud, String email) {
         super(TipoUsuario.MEDICO, login, numeroColegiado, email);
         this.nombre = nombre;
         this.apellidos = apellidos;

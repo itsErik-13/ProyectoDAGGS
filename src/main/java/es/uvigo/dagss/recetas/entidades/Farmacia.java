@@ -25,9 +25,7 @@ public class Farmacia extends Usuario {
     @Embedded
     private Direccion direccion;
 
-    private int telefono;
-
-    private String email;
+    private Integer telefono;
 
     private Boolean activo = true;
 
@@ -37,7 +35,7 @@ public class Farmacia extends Usuario {
     }
     
     //Consideramos password el numero de colegiado como se indica
-    public Farmacia(String login, String nombreEstablecimiento, String nombreFarmaceutico, String apellidosFarmaceutico, String dniOrNif, String numeroColegiado, Direccion direccion, int telefono, String email) {
+    public Farmacia(String login, String nombreEstablecimiento, String nombreFarmaceutico, String apellidosFarmaceutico, String dniOrNif, String numeroColegiado, Direccion direccion, Integer telefono, String email) {
         super(TipoUsuario.FARMACIA, login, numeroColegiado, email);
         this.nombreEstablecimiento = nombreEstablecimiento;
         this.nombreFarmaceutico = nombreFarmaceutico;
@@ -46,7 +44,6 @@ public class Farmacia extends Usuario {
         this.numeroColegiado = numeroColegiado;
         this.direccion = direccion;
         this.telefono = telefono;
-        this.email = email;
     }
 
     @Override

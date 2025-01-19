@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.net.URI;
@@ -24,18 +23,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.uvigo.dagss.recetas.controladores.excepciones.ResourceNotFoundException;
 import es.uvigo.dagss.recetas.controladores.excepciones.WrongParameterException;
-import es.uvigo.dagss.recetas.entidades.CentroSalud;
-import es.uvigo.dagss.recetas.entidades.Direccion;
-import es.uvigo.dagss.recetas.entidades.Farmacia;
 import es.uvigo.dagss.recetas.entidades.Medicamento;
-import es.uvigo.dagss.recetas.servicios.CentroSaludService;
-import es.uvigo.dagss.recetas.servicios.FarmaciaService;
-import es.uvigo.dagss.recetas.servicios.FarmaciaServiceImpl;
 import es.uvigo.dagss.recetas.servicios.MedicamentoService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/api/medicamento", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/medicamentos", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*")
 public class MedicamentoController {
 
@@ -101,8 +94,8 @@ public class MedicamentoController {
          * @return lista de medicamentos com ese nombre comercial
          */
 
-        @GetMapping(path = "/nombre")
-        public ResponseEntity<List<Medicamento>> buscarPorNombre(@RequestParam("nombre") String nombre) {
+        @GetMapping(params = "nombreComercial")
+        public ResponseEntity<List<Medicamento>> buscarPorNombre(@RequestParam("nombreComercial") String nombre) {
             List<Medicamento> medicamento = medicamentoService.buscarPorNombreComercial(nombre);
     
             if (medicamento.isEmpty()) {
@@ -120,7 +113,7 @@ public class MedicamentoController {
          * @return lista de medicamentos con ese principio activo
          */
 
-        @GetMapping(path = "/principioActivo")
+        @GetMapping(params = "principioActivo")
         public ResponseEntity<List<Medicamento>> buscarPorPrincipioActivo(@RequestParam("principioActivo") String principioActivo) {
             List<Medicamento> medicamento = medicamentoService.buscarPorPrincipioActivo(principioActivo);
     
@@ -139,7 +132,7 @@ public class MedicamentoController {
          * @return lista de medicamentos con ese fabricante
          */
 
-        @GetMapping(path = "/fabricante")
+        @GetMapping(params = "fabricante")
         public ResponseEntity<List<Medicamento>> buscarPorFabricante(@RequestParam("fabricante") String fabricante) {
             List<Medicamento> medicamento = medicamentoService.buscarPorFabricante(fabricante);
     
@@ -157,7 +150,7 @@ public class MedicamentoController {
          * @param familia del medicamento a buscar
          * @return lista de medicamentos de esa familia
          */
-        @GetMapping(path = "/familia")
+        @GetMapping(params = "familia")
         public ResponseEntity<List<Medicamento>> buscarPorFamilia(@RequestParam("familia") String familia) {
             List<Medicamento> medicamento = medicamentoService.buscarPorFamilia(familia);
     

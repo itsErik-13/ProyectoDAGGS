@@ -4,16 +4,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,17 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.uvigo.dagss.recetas.controladores.excepciones.ResourceNotFoundException;
-import es.uvigo.dagss.recetas.controladores.excepciones.WrongParameterException;
-import es.uvigo.dagss.recetas.entidades.CentroSalud;
-import es.uvigo.dagss.recetas.entidades.Direccion;
-import es.uvigo.dagss.recetas.entidades.Farmacia;
-import es.uvigo.dagss.recetas.servicios.CentroSaludService;
-import es.uvigo.dagss.recetas.servicios.FarmaciaService;
-import es.uvigo.dagss.recetas.servicios.FarmaciaServiceImpl;
-import jakarta.validation.Valid;
+
+import es.uvigo.dagss.recetas.entidades.Cita;
+import es.uvigo.dagss.recetas.servicios.CitaService;
 
 @RestController
-@RequestMapping(path = "/api/cita", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/citas", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*")
 public class CitaController {
     @Autowired
@@ -47,7 +42,7 @@ public class CitaController {
     @GetMapping()
     public ResponseEntity<List<Cita>> listarCitasOrdenadasPorHora() {
         List<Cita> citas = citaService.listarCitas();
-        citas.sort(Comparator.comparing(Cita::getHoraInicio));
+        citas.sort(Comparator.comparing(Cita::getHora));
         return new ResponseEntity<>(citas, HttpStatus.OK);
     }
 
@@ -58,11 +53,11 @@ public class CitaController {
      * @return cita con la fecha dada
      */
     public ResponseEntity<List<Cita>> buscarCitasPorFecha(
-        @RequestParam(name = "fecha", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+        @RequestParam(name = "fecha", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fecha,
         @RequestParam(name = "medicoId", required = false) Long medicoId,
         @RequestParam(name = "pacienteId", required = false) Long pacienteId) {
 
-    List<Cita> citas = citaService.buscarCitasPorFecha(fecha);
+    List<Cita> citas = citaService.buscarPorFecha(fecha);
 
         if (medicoId != null) {
             citas = citas.stream()
@@ -92,9 +87,16 @@ public class CitaController {
         if (cita.isEmpty()) {
             throw new ResourceNotFoundException("Cita no encontrada");
         } else {
-            citaService.eliminar(cita.get());
+            citaService.anular(cita.get());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
+    private URI crearURICita(Cita cita) {
+		return ServletUriComponentsBuilder.fromCurrentRequestUri()
+				.path("/{id}")
+				.buildAndExpand(cita.getId())
+				.toUri();
+	}
 
 }

@@ -30,7 +30,8 @@ public class MedicamentoServiceImpl implements MedicamentoService {
     @Override
     @Transactional
     public void eliminar(Medicamento medicamento) {
-        medicamentoDAO.delete(medicamento);
+        medicamento.desactivar();
+        medicamentoDAO.save(medicamento);
     }
 
     @Override

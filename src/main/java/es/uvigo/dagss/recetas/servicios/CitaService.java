@@ -17,7 +17,7 @@ public interface CitaService {
 
     public Optional<Cita> buscarPorId(Long id);
 
-    public List<Cita> buscarTodos();
+    public List<Cita> listarCitas();
 
     public List<Cita> buscarPorFecha(Date fecha);
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +25,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.uvigo.dagss.recetas.controladores.excepciones.ResourceNotFoundException;
 import es.uvigo.dagss.recetas.controladores.excepciones.WrongParameterException;
+import es.uvigo.dagss.recetas.entidades.CentroSalud;
+import es.uvigo.dagss.recetas.entidades.Direccion;
+import es.uvigo.dagss.recetas.entidades.Medico;
 import es.uvigo.dagss.recetas.entidades.Paciente;
 import es.uvigo.dagss.recetas.servicios.PacienteService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/api/paciente", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/pacientes", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*")
 public class PacienteController {
     @Autowired
@@ -54,8 +58,8 @@ public class PacienteController {
      * @return Paciente con el id dado
      */
     @GetMapping(path = "{id}")
-	public ResponseEntity<Medico> buscarPorId(@PathVariable("id") Long id) {
-		Optional<Medico> paciente = pacienteService.buscarPorId(id);
+	public ResponseEntity<Paciente> buscarPorId(@PathVariable("id") Long id) {
+		Optional<Paciente> paciente = pacienteService.buscarPorId(id);
 
 		if (paciente.isEmpty()) {
 			throw new ResourceNotFoundException("Paciente no encontrado");
@@ -126,7 +130,7 @@ public class PacienteController {
     @GetMapping(params = "localidad")
 	public ResponseEntity<List<Paciente>> buscarPorLocalidad(
 			@RequestParam(name = "localidad", required = true) String localidad) {
-		List<Medico> resultado = new ArrayList<>();
+		List<Paciente> resultado = new ArrayList<>();
 		resultado = pacienteService.buscarPorLocalidad(localidad);
 		return new ResponseEntity<>(resultado, HttpStatus.OK);
 	}
@@ -137,9 +141,9 @@ public class PacienteController {
      * @param idCentro aproximada del medico/s de salud a buscar
      * @return Medicos con la localidad aproximada dada
      */
-    @GetMapping(params = "idCentro")
+    @GetMapping(params = "centroSalud")
 	public ResponseEntity<List<Paciente>> buscarPorCentroSaludId(
-			@RequestParam(name = "idCentro", required = true) Long idCentro) {
+			@RequestParam(name = "centroSalud", required = true) Long idCentro) {
 		List<Paciente> resultado = new ArrayList<>();
 		resultado = pacienteService.buscarPorCentroSaludId(idCentro);
 		return new ResponseEntity<>(resultado, HttpStatus.OK);
@@ -151,34 +155,34 @@ public class PacienteController {
      * @param idMedico aproximada del medico/s de salud a buscar
      * @return Medicos con la localidad aproximada dada
      */
-    @GetMapping(params = "idMedico")
+    @GetMapping(params = "medico")
 	public ResponseEntity<List<Paciente>> buscarPorMedicoId(
-			@RequestParam(name = "idMedico", required = true) Long idMedico) {
+			@RequestParam(name = "medico", required = true) Long idMedico) {
 		List<Paciente> resultado = new ArrayList<>();
-		resultado = pacienteService.buscarPorCentroSaludId(idMedico);
+		resultado = pacienteService.buscarPorMedicoId(idMedico);
 		return new ResponseEntity<>(resultado, HttpStatus.OK);
 	}
 
     /**
      * HU-A5
-     * CHECKED!! POST BODY: { "nombre": "Hospital REST", "direccion": { "domicilio": "Calle del REST 13", "localidad": "REST", "codigoPostal": "13013", "provincia": "REST" }, "telefono": 131313131, "email": "hospitalrest@recetas.com" }
+     * CHECKED!! POST BODY: { "login": "paciente REST", "password": "73423455L", "email": "pacienteREST@recetas.com", "nombre": "REST", "apellidos": "REST REST", "dni": "REST", "numeroTarjetaSanitaria": "123456690AS", "numeroSeguridadSocial": "1234145235SDF", "direccion": { "domicilio": "Eulogio Gómez Franqueira", "localidad": "Ourense", "codigoPostal": "32002", "provincia": "Ourense" }, "telefono": 678134084, "fechaNacimiento": "1995-01-17", "centroSalud": { "id": 201, "nombre": "Hospital Amanecer", "direccion": { "domicilio": "Calle del Amanecer 45", "localidad": "Ourense", "codigoPostal": "32002", "provincia": "Ourense" }, "telefono": 988888888, "email": "hospitalamanecer@recetas.com", "activo": false }, "medico": { "id": 32, "tipo": "MEDICO", "login": "medico1", "password": "12345678", "fechaAlta": "2025-01-18T22:39:52.117+00:00", "ultimoAcceso": "2025-01-18T22:39:52.117+00:00", "activo": true, "email": "medico1@recetas.com", "nombre": "Jose", "apellidos": "Fernández González", "dni": "76735654H", "numeroColegiado": "12345678", "telefono": 619845763, "centroSalud": { "id": 201, "nombre": "Hospital Amanecer", "direccion": { "domicilio": "Calle del Amanecer 45", "localidad": "Ourense", "codigoPostal": "32002", "provincia": "Ourense" }, "telefono": 988888888, "email": "hospitalamanecer@recetas.com", "activo": false } } }
      * @param medico
      * @return
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Medico> crear(@Valid @RequestBody Medico medico) {
-        String nombre = medico.getNombre();
-        String apellidos = medico.getApellidos();
-        String dni = medico.getDni();
-        String numeroTarjetaSanitaria = medico.getNumeroTarjetaSanitaria();
-        String numeroSeguridadSocial = medico.getnumeroSeguridadSocial();
-        Direccion direccion = centroSalud.getDireccion();
-        Integer telefono = medico.getTelefono();
-        Date fechaNacimiento = medico.getFechaNacimiento();
-        CentroSalud centroSalud = medico.getCentroSalud();
-        Medico medico = medico.getMedico();
-        String email = medico.getEmail();
-        String login = medico.getLogin();
+	public ResponseEntity<Paciente> crear(@Valid @RequestBody Paciente paciente) {
+        String nombre = paciente.getNombre();
+        String apellidos = paciente.getApellidos();
+        String dni = paciente.getDni();
+        String numeroTarjetaSanitaria = paciente.getNumeroTarjetaSanitaria();
+        String numeroSeguridadSocial = paciente.getNumeroSeguridadSocial();
+        Direccion direccion = paciente.getDireccion();
+        Integer telefono = paciente.getTelefono();
+        Date fechaNacimiento = paciente.getFechaNacimiento();
+        CentroSalud centroSalud = paciente.getCentroSalud();
+        Medico medico = paciente.getMedico();
+        String email = paciente.getEmail();
+        String login = paciente.getLogin();
 
         if(nombre == null || nombre.isBlank()) {
             throw new WrongParameterException("Falta indicar nombre");

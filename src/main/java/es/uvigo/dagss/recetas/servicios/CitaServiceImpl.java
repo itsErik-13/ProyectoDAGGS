@@ -50,7 +50,7 @@ public class CitaServiceImpl implements CitaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Cita> buscarTodos() {
+    public List<Cita> listarCitas() {
         return citaDAO.findAll();
     }
 

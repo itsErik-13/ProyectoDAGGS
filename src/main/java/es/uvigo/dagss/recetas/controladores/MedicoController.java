@@ -24,12 +24,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.uvigo.dagss.recetas.controladores.excepciones.ResourceNotFoundException;
 import es.uvigo.dagss.recetas.controladores.excepciones.WrongParameterException;
+import es.uvigo.dagss.recetas.entidades.CentroSalud;
 import es.uvigo.dagss.recetas.entidades.Medico;
 import es.uvigo.dagss.recetas.servicios.MedicoService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/api/medico", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/medicos", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*")
 public class MedicoController {
     @Autowired
@@ -73,7 +74,7 @@ public class MedicoController {
      */
     @DeleteMapping(path = "{id}")
 	public ResponseEntity<HttpStatus> eliminar(@PathVariable("id") Long id) {
-		Optional<CentroSalud> medico = medicoService.buscarPorId(id);
+		Optional<Medico> medico = medicoService.buscarPorId(id);
 
 		if (medico.isEmpty()) {
 			throw new ResourceNotFoundException("Medico no encontrado");
@@ -98,7 +99,7 @@ public class MedicoController {
 			throw new ResourceNotFoundException("Medico no encontrado");
 		} else {
             medico.setId(medicoOptional.get().getId());
-			CentroSalud nuevoMedico = medicoService.modificar(medico);
+			Medico nuevoMedico = medicoService.modificar(medico);
 			return new ResponseEntity<>(nuevoMedico, HttpStatus.OK);
 		}
 	}
@@ -137,9 +138,9 @@ public class MedicoController {
      * @param idCentro aproximada del medico/s de salud a buscar
      * @return Medicos con la localidad aproximada dada
      */
-    @GetMapping(params = "idCentro")
+    @GetMapping(params = "centroSalud")
 	public ResponseEntity<List<Medico>> buscarPorMedicoId(
-			@RequestParam(name = "idCentro", required = true) Long idCentro) {
+			@RequestParam(name = "centroSalud", required = true) Long idCentro) {
 		List<Medico> resultado = new ArrayList<>();
 		resultado = medicoService.buscarPorMedicoId(idCentro);
 		return new ResponseEntity<>(resultado, HttpStatus.OK);
@@ -147,7 +148,7 @@ public class MedicoController {
 
     /**
      * HU-A3
-     * CHECKED!! POST BODY: { "nombre": "Hospital REST", "direccion": { "domicilio": "Calle del REST 13", "localidad": "REST", "codigoPostal": "13013", "provincia": "REST" }, "telefono": 131313131, "email": "hospitalrest@recetas.com" }
+     * CHECKED!! POST BODY: { "login": "medico REST", "password": "pass REST", "email": "medicoREST@recetas.com", "nombre": "REST", "apellidos": "REST REST", "dni": "REST", "numeroColegiado": "12345678", "telefono": 639043653, "centroSalud": { "id": 202, "nombre": "Punto de Atención Continuada de Vigo", "direccion": { "domicilio": "Avenida de la Avioneta 32", "localidad": "Vigo", "codigoPostal": "36201", "provincia": "Pontevedra" }, "telefono": 988777777, "email": "pacvigo@recetas.com", "activo": true } }
      * @param medico
      * @return
      */
