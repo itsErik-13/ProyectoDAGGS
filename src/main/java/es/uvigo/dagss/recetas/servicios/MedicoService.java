@@ -18,7 +18,7 @@ public interface MedicoService {
 
     public List<Medico> buscarPorNombre(String nombre);
 
-    public List<Medico> buscarPorCentroSaludLocalidad(String localidad);
+    public List<Medico> buscarPorMedicoLocalidad(String localidad);
     
-    public List<Medico> buscarPorCentroSaludId(Long idCentro);
+    public List<Medico> buscarPorMedicoId(Long idCentro);
 }

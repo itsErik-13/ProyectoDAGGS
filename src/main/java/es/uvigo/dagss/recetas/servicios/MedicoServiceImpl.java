@@ -55,13 +55,13 @@ public class MedicoServiceImpl implements MedicoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Medico> buscarPorCentroSaludLocalidad(String localidad) {
+    public List<Medico> buscarPorMedicoLocalidad(String localidad) {
         return medicoDAO.findByCentroSaludDireccionLocalidadContaining(localidad);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Medico> buscarPorCentroSaludId(Long idCentro) {
+    public List<Medico> buscarPorMedicoId(Long idCentro) {
         return medicoDAO.findByCentroSaludId(idCentro);
     }   
 }
