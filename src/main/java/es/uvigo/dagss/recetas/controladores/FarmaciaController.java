@@ -33,7 +33,7 @@ import es.uvigo.dagss.recetas.servicios.FarmaciaServiceImpl;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/api/centrossalud", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/farmacia", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*")
 public class FarmaciaController {
     @Autowired
