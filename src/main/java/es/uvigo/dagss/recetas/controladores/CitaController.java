@@ -39,10 +39,22 @@ public class CitaController {
      * 
      * @return Lista de citas
      */
-    @GetMapping()
+    /*@GetMapping()
     public ResponseEntity<List<Cita>> listarCitasOrdenadasPorHora() {
         List<Cita> citas = citaService.listarCitas();
         citas.sort(Comparator.comparing(Cita::getHora));
+        return new ResponseEntity<>(citas, HttpStatus.OK);
+    }*/
+
+    /**
+     * HU-A7
+     *
+     * @return Lista de citas
+     */
+    @GetMapping()
+    public ResponseEntity<List<Cita>> listarCitasOrdenadasPorFechaYHora() {
+        List<Cita> citas = citaService.listarCitas();
+        citas.sort(Comparator.comparing(Cita::getFecha).thenComparing(Cita::getHora));
         return new ResponseEntity<>(citas, HttpStatus.OK);
     }
 
