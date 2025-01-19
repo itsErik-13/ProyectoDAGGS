@@ -1,0 +1,100 @@
+package es.uvigo.dagss.recetas.controladores;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import es.uvigo.dagss.recetas.controladores.excepciones.ResourceNotFoundException;
+import es.uvigo.dagss.recetas.controladores.excepciones.WrongParameterException;
+import es.uvigo.dagss.recetas.entidades.CentroSalud;
+import es.uvigo.dagss.recetas.entidades.Direccion;
+import es.uvigo.dagss.recetas.entidades.Farmacia;
+import es.uvigo.dagss.recetas.servicios.CentroSaludService;
+import es.uvigo.dagss.recetas.servicios.FarmaciaService;
+import es.uvigo.dagss.recetas.servicios.FarmaciaServiceImpl;
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping(path = "/api/cita", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "*")
+public class CitaController {
+    @Autowired
+    private CitaService citaService;
+
+    /**
+     * HU-A7
+     * 
+     * @return Lista de citas
+     */
+    @GetMapping()
+    public ResponseEntity<List<Cita>> listarCitasOrdenadasPorHora() {
+        List<Cita> citas = citaService.listarCitas();
+        citas.sort(Comparator.comparing(Cita::getHoraInicio));
+        return new ResponseEntity<>(citas, HttpStatus.OK);
+    }
+
+    /**
+     * HU-A7
+     * 
+     * @param fecha de la cita a buscar
+     * @return cita con la fecha dada
+     */
+    public ResponseEntity<List<Cita>> buscarCitasPorFecha(
+        @RequestParam(name = "fecha", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+        @RequestParam(name = "medicoId", required = false) Long medicoId,
+        @RequestParam(name = "pacienteId", required = false) Long pacienteId) {
+
+    List<Cita> citas = citaService.buscarCitasPorFecha(fecha);
+
+        if (medicoId != null) {
+            citas = citas.stream()
+                .filter(cita -> cita.getMedico().getId().equals(medicoId))
+                .collect(Collectors.toList());
+        }
+
+        if (pacienteId != null) {
+            citas = citas.stream()
+                .filter(cita -> cita.getPaciente().getId().equals(pacienteId))
+                .collect(Collectors.toList());
+        }
+
+        return new ResponseEntity<>(citas, HttpStatus.OK);
+    }
+
+    /**
+     * HU-A7
+     * 
+     * @param id de la cita a eliminar
+     * @return
+     */
+    @DeleteMapping(path = "{id}")
+    public ResponseEntity<HttpStatus> eliminar(@PathVariable("id") Long id) {
+        Optional<Cita> cita = citaService.buscarPorId(id);
+
+        if (cita.isEmpty()) {
+            throw new ResourceNotFoundException("Cita no encontrada");
+        } else {
+            citaService.eliminar(cita.get());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+}

@@ -24,12 +24,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.uvigo.dagss.recetas.controladores.excepciones.ResourceNotFoundException;
 import es.uvigo.dagss.recetas.controladores.excepciones.WrongParameterException;
-import es.uvigo.dagss.recetas.entidades.CentroSalud;
 import es.uvigo.dagss.recetas.entidades.Direccion;
 import es.uvigo.dagss.recetas.entidades.Farmacia;
-import es.uvigo.dagss.recetas.servicios.CentroSaludService;
 import es.uvigo.dagss.recetas.servicios.FarmaciaService;
-import es.uvigo.dagss.recetas.servicios.FarmaciaServiceImpl;
 import jakarta.validation.Valid;
 
 @RestController
