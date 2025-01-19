@@ -42,7 +42,7 @@ public class FarmaciaController {
      * @return Lista de farmacias
      */
     @GetMapping()
-    public ResponseEntity<List<Farmacia>> listarCentrosSalud() {
+    public ResponseEntity<List<Farmacia>> lsitarFarmacias() {
         List<Farmacia> resultado = new ArrayList<>();
         resultado = farmaciaService.listarFarmacias();
         return new ResponseEntity<>(resultado, HttpStatus.OK);
