@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import es.uvigo.dagss.recetas.entidades.Cita;
+import es.uvigo.dagss.recetas.entidades.Paciente;
 
 public interface CitaService {
     public Cita crear(Cita cita);
@@ -14,6 +15,8 @@ public interface CitaService {
     public void eliminar(Cita cita);
 
     public void anular(Cita cita);
+
+    public void marcarAusente(Cita cita);
 
     public Optional<Cita> buscarPorId(Long id);
 

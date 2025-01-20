@@ -14,4 +14,6 @@ public interface RecetaService {
 	public void servir(Receta receta);
 
 	public List<Receta> buscarPorPacienteId(Long idPaciente);
+
+    public List<Receta> buscarPorPrescripcionId(Long id);
 }

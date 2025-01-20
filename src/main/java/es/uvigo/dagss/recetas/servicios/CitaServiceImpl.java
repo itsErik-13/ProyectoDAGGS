@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.uvigo.dagss.recetas.daos.CitaDAO;
 import es.uvigo.dagss.recetas.entidades.Cita;
+import es.uvigo.dagss.recetas.entidades.Paciente;
 
 @Service
 public class CitaServiceImpl implements CitaService {
@@ -39,6 +40,13 @@ public class CitaServiceImpl implements CitaService {
     @Transactional
     public void anular(Cita cita) {
         cita.anular();
+        citaDAO.save(cita);
+    }
+
+    @Override
+    @Transactional
+    public void marcarAusente(Cita cita) {
+        cita.ausente();
         citaDAO.save(cita);
     }
 
@@ -83,5 +91,4 @@ public class CitaServiceImpl implements CitaService {
     public List<Cita> buscarPorFechaAndMedicoIdOrderByFechaAscHoraAsc(Date fecha, Long idMedico) {
         return citaDAO.findByFechaAndMedicoIdOrderByFechaAscHoraAsc(fecha, idMedico);
     }
-    
 }

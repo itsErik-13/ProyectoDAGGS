@@ -149,7 +149,7 @@ public class RecetasApplication implements CommandLineRunner {
 		medicamento4 = medicamentoDAO.save(medicamento4);
 		medicamento5 = medicamentoDAO.save(medicamento5);
 		medicamento6 = medicamentoDAO.save(medicamento6);
-
+		
 		Prescripcion prescripcion1 = new Prescripcion(medicamento1, paciente1, medico, 3.0,
 				"Tomar 1 comprimido 3 veces al día después de las comidas", new Date(2025 - 1900, 1 - 1, 31));
 		Prescripcion prescripcion2 = new Prescripcion(medicamento2, paciente2, medico2, 2.0,

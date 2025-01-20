@@ -47,5 +47,10 @@ public class RecetaServiceImpl implements RecetaService {
         return recetaDAO.findByPrescripcionPacienteId(idPaciente);
     }
 
+    @Override
+    public List<Receta> buscarPorPrescripcionId(Long id) {
+        return recetaDAO.findByPrescripcionId(id);
+    }
+
     
 }
