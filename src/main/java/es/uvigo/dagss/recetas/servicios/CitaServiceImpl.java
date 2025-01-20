@@ -51,7 +51,7 @@ public class CitaServiceImpl implements CitaService {
     @Override
     @Transactional(readOnly = true)
     public List<Cita> listarCitas() {
-        return citaDAO.findAll();
+        return citaDAO.findAllByOrderByFechaAscHoraAsc();
     }
 
     @Override
@@ -70,6 +70,18 @@ public class CitaServiceImpl implements CitaService {
     @Transactional(readOnly = true)
     public List<Cita> buscarPorPacienteId(Long idPaciente) {
         return citaDAO.findByPacienteId(idPaciente);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Cita> buscarPorFechaAndPacienteIdOrderByFechaAscHoraAsc(Date fecha, Long idPaciente) {
+        return citaDAO.findByFechaAndPacienteIdOrderByFechaAscHoraAsc(fecha, idPaciente);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Cita> buscarPorFechaAndMedicoIdOrderByFechaAscHoraAsc(Date fecha, Long idMedico) {
+        return citaDAO.findByFechaAndMedicoIdOrderByFechaAscHoraAsc(fecha, idMedico);
     }
     
 }

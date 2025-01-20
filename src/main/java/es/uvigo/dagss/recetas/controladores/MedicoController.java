@@ -88,7 +88,7 @@ public class MedicoController {
      * HU-A4
      * Sólo se updatea correctamente si se añade un id en el body y todos los datos necesarios, en otro caso se crea una nueva entidad, PREGUNTAR
      * @param id del medico a modificar
-     * @param administrador el conjunto de medicos modificado
+     * @param medico el conjunto de medicos modificado
      * @return la instancia modificada
      */
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

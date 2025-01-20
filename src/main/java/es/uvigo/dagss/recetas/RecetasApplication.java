@@ -67,8 +67,8 @@ public class RecetasApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// eliminarEntidades();
-		// crearEntidades();
+		eliminarEntidades();
+		crearEntidades();
 		// listarEntidades();
 	}
 
@@ -124,9 +124,9 @@ public class RecetasApplication implements CommandLineRunner {
 		farmacia1 = farmaciaDAO.save(farmacia1);
 		farmacia2 = farmaciaDAO.save(farmacia2);
 
-		Date fecha1 = new Date(125, 0, 18, 10, 0); // 18 de enero de 2025, 10:00 AM
-		Date fecha2 = new Date(125, 0, 19, 12, 30); // 19 de enero de 2025, 12:30 PM
-		Date fecha3 = new Date(125, 0, 20, 9, 15); // 20 de enero de 2025, 9:15 AM
+		Date fecha1 = new Date(125, 0, 18, 10, 15); // 18 de enero de 2025, 10:00 AM
+		Date fecha2 = new Date(125, 0, 18, 10, 00); // 19 de enero de 2025, 12:30 PM
+		Date fecha3 = new Date(125, 0, 18, 9, 15); // 20 de enero de 2025, 9:15 AM
 
 		Cita cita1 = new Cita(paciente1, medico, fecha1, fecha1);
 		Cita cita2 = new Cita(paciente2, medico2, fecha2, fecha2);

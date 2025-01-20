@@ -54,7 +54,6 @@ public class CitaController {
     @GetMapping()
     public ResponseEntity<List<Cita>> listarCitasOrdenadasPorFechaYHora() {
         List<Cita> citas = citaService.listarCitas();
-        citas.sort(Comparator.comparing(Cita::getFecha).thenComparing(Cita::getHora));
         return new ResponseEntity<>(citas, HttpStatus.OK);
     }
 
@@ -64,23 +63,20 @@ public class CitaController {
      * @param fecha de la cita a buscar
      * @return cita con la fecha dada
      */
+    @GetMapping(params = "fecha")
     public ResponseEntity<List<Cita>> buscarCitasPorFecha(
         @RequestParam(name = "fecha", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fecha,
-        @RequestParam(name = "medicoId", required = false) Long medicoId,
-        @RequestParam(name = "pacienteId", required = false) Long pacienteId) {
+        @RequestParam(name = "medico", required = false) Long medico,
+        @RequestParam(name = "paciente", required = false) Long paciente) {
 
-    List<Cita> citas = citaService.buscarPorFecha(fecha);
+        List<Cita> citas = citaService.buscarPorFecha(fecha);
 
-        if (medicoId != null) {
-            citas = citas.stream()
-                .filter(cita -> cita.getMedico().getId().equals(medicoId))
-                .collect(Collectors.toList());
+        if (medico != null) {
+            citas = citaService.buscarPorFechaAndMedicoIdOrderByFechaAscHoraAsc(fecha, medico);
         }
 
-        if (pacienteId != null) {
-            citas = citas.stream()
-                .filter(cita -> cita.getPaciente().getId().equals(pacienteId))
-                .collect(Collectors.toList());
+        if (paciente != null) {
+            citas = citaService.buscarPorFechaAndPacienteIdOrderByFechaAscHoraAsc(fecha, paciente);
         }
 
         return new ResponseEntity<>(citas, HttpStatus.OK);

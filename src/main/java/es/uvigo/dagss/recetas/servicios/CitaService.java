@@ -24,4 +24,8 @@ public interface CitaService {
     public List<Cita> buscarPorMedicoId(Long idMedico);
 
     public List<Cita> buscarPorPacienteId(Long idPaciente);
+
+    public List<Cita> buscarPorFechaAndPacienteIdOrderByFechaAscHoraAsc(Date fecha, Long idPaciente);
+
+    public List<Cita> buscarPorFechaAndMedicoIdOrderByFechaAscHoraAsc(Date fecha, Long idMedico);
 }
