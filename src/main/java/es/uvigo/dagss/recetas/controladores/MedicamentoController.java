@@ -110,7 +110,7 @@ public class MedicamentoController {
     }
 
     /**
-     * HU-A8
+     * HU-A8 HU-M4
      * CHECKED!!!
      * 
      * @param nombre comercial del medicamento a buscar
@@ -129,7 +129,7 @@ public class MedicamentoController {
     }
 
     /**
-     * HU-A8
+     * HU-A8 HU-M4
      * CHECKED!!!
      * 
      * @param principio activo del medicamento a buscar
@@ -150,7 +150,7 @@ public class MedicamentoController {
     }
 
     /**
-     * HU-A8
+     * HU-A8 HU-M4
      * CHECKED!!!
      * 
      * @param fabricante del medicamento a buscar
@@ -169,7 +169,7 @@ public class MedicamentoController {
     }
 
     /**
-     * HU-A8
+     * HU-A8 HU-M4
      * CHECKED!!!   
      * 
      * @param familia del medicamento a buscar
@@ -223,6 +223,8 @@ public class MedicamentoController {
         URI uri = crearURIMedicamento(nuevoMedicamento);
         return ResponseEntity.created(uri).body(nuevoMedicamento);
     }
+
+    
 
     private URI crearURIMedicamento(Medicamento medicamento) {
         return ServletUriComponentsBuilder.fromCurrentRequestUri()

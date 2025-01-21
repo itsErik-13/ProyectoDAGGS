@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.uvigo.dagss.recetas.daos.CitaDAO;
 import es.uvigo.dagss.recetas.entidades.Cita;
-import es.uvigo.dagss.recetas.entidades.Paciente;
 
 @Service
 public class CitaServiceImpl implements CitaService {

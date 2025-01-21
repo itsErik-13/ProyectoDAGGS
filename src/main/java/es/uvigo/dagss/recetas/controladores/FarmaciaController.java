@@ -3,6 +3,7 @@ package es.uvigo.dagss.recetas.controladores;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -189,6 +190,31 @@ public class FarmaciaController {
         URI uri = crearURIFarmacia(nuevaFarmacia);
         return ResponseEntity.created(uri).body(nuevaFarmacia);
     }
+
+    /**
+     * HU-M6
+     * 
+     * @param id de la farmacia a modificar las credenciales o datos básicos (considero contraseña, dirección, nombre establecimiento, telefono y email)
+     * @param medico el medico modificado
+     * @return la instancia modificada
+     */
+    @PatchMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Farmacia> modificarPerfil(@PathVariable("id") Long id, @Valid @RequestBody Farmacia farmacia) {
+		Optional<Farmacia> farmaciaOptional = farmaciaService.buscarPorId(id);
+
+		if (farmaciaOptional.isEmpty()) {
+			throw new ResourceNotFoundException("Medico no encontrado");
+		} else {
+            farmaciaOptional.get().setPassword(farmacia.getPassword() == null ? farmaciaOptional.get().getPassword() : farmacia.getPassword());
+            farmaciaOptional.get().setDireccion(farmacia.getDireccion() == null ? farmaciaOptional.get().getDireccion() : farmacia.getDireccion());
+            farmaciaOptional.get().setNombreEstablecimiento(farmacia.getNombreEstablecimiento() == null ? farmaciaOptional.get().getNombreEstablecimiento() : farmacia.getNombreEstablecimiento());
+            farmaciaOptional.get().setTelefono(farmacia.getTelefono() == null ? farmaciaOptional.get().getTelefono() : farmacia.getTelefono());
+            farmaciaOptional.get().setEmail(farmacia.getEmail() == null ? farmaciaOptional.get().getEmail() : farmacia.getEmail());
+            
+			Farmacia nuevaFarmacia = farmaciaService.modificar(farmaciaOptional.get());
+			return new ResponseEntity<>(nuevaFarmacia, HttpStatus.OK);
+		}
+	}
 
     private URI crearURIFarmacia(Farmacia farmacia) {
         return ServletUriComponentsBuilder.fromCurrentRequestUri()

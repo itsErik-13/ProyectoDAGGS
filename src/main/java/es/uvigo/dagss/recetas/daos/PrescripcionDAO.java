@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PrescripcionDAO extends JpaRepository<Prescripcion, Long> {
 
-    public Optional<Prescripcion> findById(Long id);
-
     public List<Prescripcion> findByPacienteId(Long id);
 
     public List<Prescripcion> findByPacienteIdAndFechaFinGreaterThanEqualOrderByFechaFinAsc(Long pacienteId, Date fechaActual);

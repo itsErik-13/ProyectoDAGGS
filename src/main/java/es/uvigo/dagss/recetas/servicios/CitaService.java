@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import es.uvigo.dagss.recetas.entidades.Cita;
-import es.uvigo.dagss.recetas.entidades.Paciente;
 
 public interface CitaService {
     public Cita crear(Cita cita);

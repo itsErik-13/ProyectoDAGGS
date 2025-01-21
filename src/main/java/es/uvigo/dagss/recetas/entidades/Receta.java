@@ -48,7 +48,7 @@ public class Receta  implements Serializable{
 
     private EstadoReceta estado = EstadoReceta.PLANIFICADA;
 
-
+    @ManyToOne
     private Farmacia farmacia = null;
 
     public Receta(Prescripcion prescripcion, Date fechaValidezInicial, Date fechaValidezFinal, int numCajas) {
@@ -71,7 +71,7 @@ public class Receta  implements Serializable{
         this.estado = EstadoReceta.SERVIDA;
     }
 
-    private void setFarmacia(Farmacia farmacia) {
+    public void setFarmacia(Farmacia farmacia) {
         this.farmacia = farmacia;
     }
 }

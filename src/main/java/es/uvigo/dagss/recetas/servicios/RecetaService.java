@@ -1,7 +1,9 @@
 package es.uvigo.dagss.recetas.servicios;
 
 import java.util.List;
+import java.util.Optional;
 
+import es.uvigo.dagss.recetas.entidades.Farmacia;
 import es.uvigo.dagss.recetas.entidades.Receta;
 
 public interface RecetaService {
@@ -11,7 +13,9 @@ public interface RecetaService {
     
 	public void anular(Receta receta);
 
-	public void servir(Receta receta);
+	public void servir(Receta receta, Farmacia farmacia);
+
+	public Optional<Receta> buscarPorId(Long id);
 
 	public List<Receta> buscarPorPacienteId(Long idPaciente);
 

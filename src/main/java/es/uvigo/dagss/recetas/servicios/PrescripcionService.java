@@ -17,4 +17,6 @@ public interface PrescripcionService {
     public List<Prescripcion> buscarPorPacienteId(Long id);
 
     public List<Prescripcion> buscarPrescripcionesEnVigor(Long paciente);
+
+    public void generarPlanRecetas(Prescripcion prescripcion);
 }

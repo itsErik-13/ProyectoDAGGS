@@ -3,6 +3,7 @@ package es.uvigo.dagss.recetas.controladores;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -100,6 +101,32 @@ public class MedicoController {
 		} else {
             medico.setId(medicoOptional.get().getId());
 			Medico nuevoMedico = medicoService.modificar(medico);
+			return new ResponseEntity<>(nuevoMedico, HttpStatus.OK);
+		}
+	}
+
+    /**
+     * HU-M6
+     * 
+     * @param id del medico a modificar las credenciales o datos básicos
+     * @param medico el medico modificado
+     * @return la instancia modificada
+     */
+    @PatchMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Medico> modificarPerfil(@PathVariable("id") Long id, @Valid @RequestBody Medico medico) {
+		Optional<Medico> medicoOptional = medicoService.buscarPorId(id);
+
+		if (medicoOptional.isEmpty()) {
+			throw new ResourceNotFoundException("Medico no encontrado");
+		} else {
+            medicoOptional.get().setPassword(medico.getPassword() == null ? medicoOptional.get().getPassword() : medico.getPassword());
+            medicoOptional.get().setNombre(medico.getNombre() == null ? medicoOptional.get().getNombre() : medico.getNombre());
+            medicoOptional.get().setApellidos(medico.getApellidos() == null ? medicoOptional.get().getApellidos() : medico.getApellidos());
+            medicoOptional.get().setDni(medico.getDni() == null ? medicoOptional.get().getDni() : medico.getDni());
+            medicoOptional.get().setEmail(medico.getEmail() == null ? medicoOptional.get().getEmail() : medico.getEmail());
+            medicoOptional.get().setTelefono(medico.getTelefono() == null ? medicoOptional.get().getTelefono() : medico.getTelefono());
+            
+			Medico nuevoMedico = medicoService.modificar(medicoOptional.get());
 			return new ResponseEntity<>(nuevoMedico, HttpStatus.OK);
 		}
 	}
