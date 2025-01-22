@@ -58,5 +58,10 @@ public class CentroSaludServiceImpl implements CentroSaludService {
     public Optional<CentroSalud> buscarPorId(Long id) {
         return centroSaludDAO.findById(id);
     }
+
+    @Override
+    public List<CentroSalud> buscarPorProvincia(String provincia) {
+        return centroSaludDAO.findByDireccionProvinciaContaining(provincia);
+    }
     
 }

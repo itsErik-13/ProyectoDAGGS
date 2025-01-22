@@ -3,6 +3,7 @@ package es.uvigo.dagss.recetas.controladores;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,6 +28,7 @@ import es.uvigo.dagss.recetas.controladores.excepciones.ResourceNotFoundExceptio
 import es.uvigo.dagss.recetas.controladores.excepciones.WrongParameterException;
 import es.uvigo.dagss.recetas.entidades.CentroSalud;
 import es.uvigo.dagss.recetas.entidades.Direccion;
+import es.uvigo.dagss.recetas.entidades.Farmacia;
 import es.uvigo.dagss.recetas.entidades.Medico;
 import es.uvigo.dagss.recetas.entidades.Paciente;
 import es.uvigo.dagss.recetas.servicios.PacienteService;
@@ -226,6 +228,31 @@ public class PacienteController {
         nuevoPaciente = pacienteService.crear(nuevoPaciente);
         URI uri = crearURIPaciente(nuevoPaciente);
         return ResponseEntity.created(uri).body(nuevoPaciente);
+	}
+
+    /**
+     * HU-P5
+     * 
+     * @param id del paciente a modificar las credenciales o datos básicos (considero contraseña, dirección, nombre establecimiento, telefono y email)
+     * @param medico el medico modificado
+     * @return la instancia modificada
+     */
+    @PatchMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Paciente> modificarPerfil(@PathVariable("id") Long id, @Valid @RequestBody Paciente paciente) {
+		Optional<Paciente> pacienteOpcional = pacienteService.buscarPorId(id);
+
+		if (pacienteOpcional.isEmpty()) {
+			throw new ResourceNotFoundException("Paciente no encontrado");
+		} else {
+            pacienteOpcional.get().setPassword(paciente.getPassword() == null ? pacienteOpcional.get().getPassword() : paciente.getPassword());
+            pacienteOpcional.get().setDireccion(paciente.getDireccion() == null ? pacienteOpcional.get().getDireccion() : paciente.getDireccion());
+            pacienteOpcional.get().setNombre(paciente.getNombre() == null ? pacienteOpcional.get().getNombre() : paciente.getNombre());
+            pacienteOpcional.get().setTelefono(paciente.getTelefono() == null ? pacienteOpcional.get().getTelefono() : paciente.getTelefono());
+            pacienteOpcional.get().setEmail(paciente.getEmail() == null ? pacienteOpcional.get().getEmail() : paciente.getEmail());
+            
+			Paciente nuevoPaciente = pacienteService.modificar(pacienteOpcional.get());
+			return new ResponseEntity<>(nuevoPaciente, HttpStatus.OK);
+		}
 	}
 
 

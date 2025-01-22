@@ -192,7 +192,7 @@ public class FarmaciaController {
     }
 
     /**
-     * HU-M6
+     * HU-F4
      * 
      * @param id de la farmacia a modificar las credenciales o datos básicos (considero contraseña, dirección, nombre establecimiento, telefono y email)
      * @param medico el medico modificado
@@ -203,7 +203,7 @@ public class FarmaciaController {
 		Optional<Farmacia> farmaciaOptional = farmaciaService.buscarPorId(id);
 
 		if (farmaciaOptional.isEmpty()) {
-			throw new ResourceNotFoundException("Medico no encontrado");
+			throw new ResourceNotFoundException("Farmacia no encontrada");
 		} else {
             farmaciaOptional.get().setPassword(farmacia.getPassword() == null ? farmaciaOptional.get().getPassword() : farmacia.getPassword());
             farmaciaOptional.get().setDireccion(farmacia.getDireccion() == null ? farmaciaOptional.get().getDireccion() : farmacia.getDireccion());

@@ -10,4 +10,6 @@ public interface CentroSaludDAO extends JpaRepository<CentroSalud, Long> {
     public List<CentroSalud> findByNombreContaining(String nombre);
 
     public List<CentroSalud> findByDireccionLocalidadContaining(String localidad);
+
+    public List<CentroSalud> findByDireccionProvinciaContaining(String provincia);
 }

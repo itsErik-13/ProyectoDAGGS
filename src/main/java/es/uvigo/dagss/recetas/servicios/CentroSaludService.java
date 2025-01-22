@@ -18,5 +18,7 @@ public interface CentroSaludService {
 
     public List<CentroSalud> buscarPorLocalidad(String localidad);
 
+    public List<CentroSalud> buscarPorProvincia(String provincia);
+
     public Optional<CentroSalud> buscarPorId(Long id);
 }

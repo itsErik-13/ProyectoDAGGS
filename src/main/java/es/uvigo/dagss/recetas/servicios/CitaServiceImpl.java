@@ -1,8 +1,16 @@
 package es.uvigo.dagss.recetas.servicios;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.uvigo.dagss.recetas.daos.CitaDAO;
 import es.uvigo.dagss.recetas.entidades.Cita;
+import es.uvigo.dagss.recetas.entidades.EstadoCita;
+import es.uvigo.dagss.recetas.entidades.Medico;
 
 @Service
 public class CitaServiceImpl implements CitaService {
@@ -89,5 +99,31 @@ public class CitaServiceImpl implements CitaService {
     @Transactional(readOnly = true)
     public List<Cita> buscarPorFechaAndMedicoIdOrderByFechaAscHoraAsc(Date fecha, Long idMedico) {
         return citaDAO.findByFechaAndMedicoIdOrderByFechaAscHoraAsc(fecha, idMedico);
+    }
+
+    @Override
+    public List<LocalTime> obtenerHuecosDisponibles(Date fecha, Long idMedico) {
+        List<Cita> citasPlanificadas = citaDAO.findByMedicoIdAndFechaAndEstado(idMedico, fecha, EstadoCita.PLANIFICADA);
+        Set<LocalTime> horasOcupadas = new HashSet<>();
+
+        for (Cita cita : citasPlanificadas) {
+            horasOcupadas.add(LocalTime.of(cita.getHora().getHours(), cita.getHora().getMinutes(), cita.getHora().getSeconds()));
+        }
+
+        List<LocalTime> horasDisponibles = new ArrayList<>();
+        LocalTime horaInicio = LocalTime.of(8, 30, 0);
+        LocalTime horaFin = LocalTime.of(15, 30, 0);
+        LocalTime horaActual = horaInicio;
+
+        while (horaActual.isBefore(horaFin)) {
+            if (!horasOcupadas.contains(horaActual)) {
+                horasDisponibles.add(horaActual);
+            }
+            horaActual = horaActual.plusMinutes(15);
+        }
+
+        horasDisponibles.removeAll(horasOcupadas);
+
+        return horasDisponibles;
     }
 }

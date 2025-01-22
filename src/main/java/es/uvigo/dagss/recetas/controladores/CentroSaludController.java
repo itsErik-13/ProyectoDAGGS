@@ -133,6 +133,18 @@ public class CentroSaludController {
 	}
 
     /**
+     * @param localidad aproximada del centro/s de salud a buscar
+     * @return Centros de salud con la localidad aproximada dada
+     */
+    @GetMapping(params = "provincia")
+	public ResponseEntity<List<CentroSalud>> buscarPorProvincia(
+			@RequestParam(name = "provincia", required = true) String provincia) {
+		List<CentroSalud> resultado = new ArrayList<>();
+		resultado = centroSaludService.buscarPorLocalidad(provincia);
+		return new ResponseEntity<>(resultado, HttpStatus.OK);
+	}
+
+    /**
      * HU-A3
      * CHECKED!! POST BODY: { "nombre": "Hospital REST", "direccion": { "domicilio": "Calle del REST 13", "localidad": "REST", "codigoPostal": "13013", "provincia": "REST" }, "telefono": 131313131, "email": "hospitalrest@recetas.com" }
      * @param centroSalud

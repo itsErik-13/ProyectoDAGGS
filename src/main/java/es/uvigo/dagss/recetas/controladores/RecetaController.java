@@ -34,7 +34,7 @@ public class RecetaController {
 
 
     /**
-     * HU-F2
+     * HU-F2 HU-P4
      * CHECKED!!!
      * 
      * 

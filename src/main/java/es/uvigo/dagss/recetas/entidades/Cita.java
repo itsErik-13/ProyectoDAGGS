@@ -36,7 +36,8 @@ public class Cita implements Serializable {
     @Temporal(TemporalType.TIME)
     private Date hora;
 
-    private int duracion = 15; // en minutos
+
+    private Integer duracion = 15; // en minutos
 
     @Enumerated(EnumType.STRING)
     private EstadoCita estado = EstadoCita.PLANIFICADA; // Considero que cuando se crea una cita se marca como
@@ -49,7 +50,7 @@ public class Cita implements Serializable {
         this.hora = hora;
     }
 
-    public Cita(Paciente paciente, Medico medico, Date fecha, Date hora, int duracionMin) {
+    public Cita(Paciente paciente, Medico medico, Date fecha, Date hora, Integer duracionMin) {
         this.paciente = paciente;
         this.medico = medico;
         this.fecha = fecha;

@@ -1,5 +1,6 @@
 package es.uvigo.dagss.recetas.servicios;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,4 +31,6 @@ public interface CitaService {
     public List<Cita> buscarPorFechaAndPacienteIdOrderByFechaAscHoraAsc(Date fecha, Long idPaciente);
 
     public List<Cita> buscarPorFechaAndMedicoIdOrderByFechaAscHoraAsc(Date fecha, Long idMedico);
+
+    public List<LocalTime> obtenerHuecosDisponibles(Date fecha, Long medico);
 }

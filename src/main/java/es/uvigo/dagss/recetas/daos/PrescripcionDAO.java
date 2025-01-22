@@ -4,7 +4,6 @@ import es.uvigo.dagss.recetas.entidades.Prescripcion;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
