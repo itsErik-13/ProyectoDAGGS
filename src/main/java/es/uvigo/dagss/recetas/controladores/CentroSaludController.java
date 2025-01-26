@@ -86,7 +86,7 @@ public class CentroSaludController {
 
     /**
      * HU-A3
-     * Sólo se updatea correctamente si se añade un id en el body y todos los datos necesarios, en otro caso se crea una nueva entidad, PREGUNTAR
+     * Sólo se updatea correctamente si se añade un id en el body y todos los datos necesarios, en otro caso se crea una nueva entidad
      * @param id del centro de salud a modificar
      * @param administrador el centro de salud modificado
      * @return la instancia modificada

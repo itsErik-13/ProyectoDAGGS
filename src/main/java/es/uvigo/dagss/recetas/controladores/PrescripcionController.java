@@ -47,7 +47,6 @@ public class PrescripcionController {
      * HU-M3
      * CHECKED!!!
      * 
-     * PREGUNTAR SI DEVOLVER UNA LISTA DE DTOs O SI SE RENDERIZA EN FRONT LA INFORMACIÓN QUE SE PIDE
      * 
      * @param paciente paciente a buscar las prescripciones
      * @return prescripciones en vigor para el paciente pasado como parametro

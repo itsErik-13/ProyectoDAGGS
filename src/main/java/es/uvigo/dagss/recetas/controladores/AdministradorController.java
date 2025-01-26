@@ -83,7 +83,7 @@ public class AdministradorController {
 
     /**
      * HU-A2
-     * Sólo se updatea correctamente si se añade un id en el body y todos los datos necesarios, en otro caso se crea una nueva entidad, PREGUNTAR
+     * Sólo se updatea correctamente si se añade un id en el body y todos los datos necesarios, en otro caso se crea una nueva entidad
      * @param id del administrador a modificar
      * @param administrador el administrador modificado
      * @return la instancia modificada
