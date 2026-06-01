@@ -20,53 +20,50 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)  // Una tabla propia para cada subclase
-@DiscriminatorColumn(name = "TIPO_USUARIO",
-                     discriminatorType = DiscriminatorType.STRING,
-                     length = 20)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // Una tabla propia para cada subclase
+@DiscriminatorColumn(name = "TIPO_USUARIO", discriminatorType = DiscriminatorType.STRING, length = 20)
 public abstract class Usuario implements Serializable {
 
-    @Id
-    @TableGenerator(name = "USUARIO_GEN", table = "USUARIO_GEN", pkColumnName = "GEN_NAME", valueColumnName = "GEN_VAL", allocationSize = 1)           
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "USUARIO_GEN")
-    private Long id;
+	@Id
+	@TableGenerator(name = "USUARIO_GEN", table = "USUARIO_GEN", pkColumnName = "GEN_NAME", valueColumnName = "GEN_VAL", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "USUARIO_GEN")
+	private Long id;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "TIPO_USUARIO", length = 20)
+	protected TipoUsuario tipo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "TIPO_USUARIO", length = 20)
-    protected TipoUsuario tipo;
+	private String login;
+	private String password;
 
-    private String login;
-    private String password;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fechaAlta;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaAlta;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date ultimoAcceso;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date ultimoAcceso;
 
 	private Boolean activo = true;
 
 	protected String email;
-	
-    public Usuario() {
-        this.fechaAlta = Calendar.getInstance().getTime();
-        this.ultimoAcceso = Calendar.getInstance().getTime();
+
+	public Usuario() {
+		this.fechaAlta = Calendar.getInstance().getTime();
+		this.ultimoAcceso = Calendar.getInstance().getTime();
 		this.activo = true;
-    }
+	}
 
-    public Usuario(TipoUsuario tipo) {
-    	this();
-        this.tipo = tipo;
-    }
+	public Usuario(TipoUsuario tipo) {
+		this();
+		this.tipo = tipo;
+	}
 
-    public Usuario(TipoUsuario tipo, String login, String password, String email) {
-    	this();
-        this.tipo = tipo;
-        this.login = login;
-        this.password = password;
+	public Usuario(TipoUsuario tipo, String login, String password, String email) {
+		this();
+		this.tipo = tipo;
+		this.login = login;
+		this.password = password;
 		this.email = email;
-    }
+	}
 
 	public Long getId() {
 		return id;
@@ -92,7 +89,6 @@ public abstract class Usuario implements Serializable {
 		this.ultimoAcceso = ultimoAcceso;
 	}
 
-
 	public TipoUsuario getTipo() {
 		return tipo;
 	}
@@ -117,9 +113,9 @@ public abstract class Usuario implements Serializable {
 		this.password = password;
 	}
 
-    public Boolean getActivo() {
-        return activo;
-    }
+	public Boolean getActivo() {
+		return activo;
+	}
 
 	public String getEmail() {
 		return email;
@@ -129,21 +125,21 @@ public abstract class Usuario implements Serializable {
 		this.email = email;
 	}
 
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
-    }
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
 
-    public void activar() {
-        this.activo = true;
-    }
+	public void activar() {
+		this.activo = true;
+	}
 
-    public void desactivar() {
-        this.activo = false;
-    }
+	public void desactivar() {
+		this.activo = false;
+	}
 
 	@Override
 	public int hashCode() {
-		if (this.id !=null)
+		if (this.id != null)
 			return Objects.hash(id);
 		return Objects.hash(fechaAlta, login);
 	}
@@ -157,13 +153,20 @@ public abstract class Usuario implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		if (this.id !=null)
+		if (this.id != null)
 			return this.id.equals(other.getId());
 		return Objects.equals(fechaAlta, other.fechaAlta)
 				&& Objects.equals(login, other.login);
 	}
 
+	public javax.crypto.spec.IvParameterSpec getCipherIv() {
+		return new javax.crypto.spec.IvParameterSpec(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+	}
 
-    
- 
+	public javax.crypto.spec.SecretKeySpec getCipherKey() {
+		byte[] keyBytes = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13,
+				0x14, 0x15, 0x16 };
+		return new javax.crypto.spec.SecretKeySpec(keyBytes, "AES");
+	}
+
 }

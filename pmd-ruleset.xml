@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ruleset name="Custom Ruleset for ProyectoDAGGS"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        Ruleset personalizado para ProyectoDAGGS evaluando Mantenibilidad, Fiabilidad y Eficiencia (ISO 25000).
+    </description>
+
+    <!-- 1. BEST PRACTICES (Buenas Prácticas) -> ISO 25000: Mantenibilidad (Analizabilidad) -->
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateField"/>
+    <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
+    <rule ref="category/java/bestpractices.xml/AvoidReassigningParameters"/>
+
+    <!-- 2. CODE STYLE (Estilo de Código) -> ISO 25000: Mantenibilidad (Analizabilidad, Modificabilidad) -->
+    <rule ref="category/java/codestyle.xml/ExtendsObject"/>
+    <rule ref="category/java/codestyle.xml/ForLoopShouldBeWhileLoop"/>
+
+    <!-- 3. DESIGN (Diseño) -> ISO 25000: Mantenibilidad (Modularidad, Capacidad de ser probado) -->
+    <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
+        <properties>
+            <property name="problemDepth" value="3" />
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="30"/>
+            <property name="methodReportLevel" value="10"/>
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/ExcessiveMethodLength">
+        <properties>
+            <property name="minimum" value="60"/>
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/ExcessiveClassLength">
+        <properties>
+            <property name="minimum" value="500"/>
+        </properties>
+    </rule>
+
+    <!-- 4. ERROR PRONE (Propenso a errores) -> ISO 25000: Fiabilidad (Tolerancia a fallos, Madurez) -->
+    <rule ref="category/java/errorprone.xml/EmptyCatchBlock"/>
+    <rule ref="category/java/errorprone.xml/AvoidBranchingStatementAsLastInLoop"/>
+    <rule ref="category/java/errorprone.xml/EqualsNull"/>
+
+    <!-- 5. PERFORMANCE (Rendimiento) -> ISO 25000: Eficiencia de Desempeño (Utilización de recursos, Comportamiento temporal) -->
+    <rule ref="category/java/performance.xml/StringInstantiation"/>
+    <rule ref="category/java/performance.xml/UseStringBufferForStringAppends"/>
+
+    <!-- 6. SECURITY (Seguridad) -> ISO 25000: Seguridad (Confidencialidad, Integridad, Autenticidad) -->
+    <rule ref="category/java/security.xml/InsecureCryptoIv"/>
+    <rule ref="category/java/security.xml/HardCodedCryptoKey"/>
+
+</ruleset>

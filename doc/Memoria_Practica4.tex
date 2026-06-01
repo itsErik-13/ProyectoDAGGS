@@ -1,0 +1,470 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{longtable}
+
+% Configuración de la tipografía Garamond
+\usepackage{ebgaramond}
+
+% Configuración del estilo de código (Java/XML/Bash)
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{
+  frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ñ}{{\~N}}1 {¿}{{\textquestiondown}}1 {¡}{{\textexclamdown}}1
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\begin{document}
+
+% Portada académica premium
+\begin{titlepage}
+    \centering
+    \vspace*{1.5cm}
+    {\scshape\LARGE Universidad de Vigo \par}
+    \vspace{1cm}
+    {\scshape\Large Máster en Ingeniería Informática / Cursos de Postgrado \par}
+    \vspace{0.5cm}
+    {\large Asignatura: Análisis de la Calidad del Código y Seguridad en la Ingeniería del Software (ACCSI)\par}
+    \vspace{1.5cm}
+    {\huge\bfseries Práctica 4: Herramientas de Análisis Estático de Código \par}
+    \vspace{0.5cm}
+    {\Large\itshape Evaluación de Calidad del Producto bajo el Estándar ISO/IEC 25000 empleando PMD \par}
+    \vspace{2cm}
+    {\large\textbf{Alumno:} [Nombre del Alumno] \par}
+    \vspace{0.5cm}
+    {\large\textbf{Fecha de Entrega:} 3 de junio de 2026 \par}
+    \vspace{0.5cm}
+    {\large\textbf{Curso Académico:} 2025/2026 \par}
+    \vfill
+    {\small Tipografía oficial sugerida: Garamond 12 ptos \par}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% =========================================================================
+% SECCIÓN 1: DESCRIPCIÓN DEL CÓDIGO (COLOCADA EN PRIMER LUGAR POR SOLICITUD)
+% =========================================================================
+\section{Descripción del Código Java Evaluado}
+La base de código objeto de la presente evaluación estática corresponde a \textbf{ProyectoDAGGS} (denominado comercialmente ``Recetas''). Se trata de una aplicación de backend empresarial desarrollada en Java utilizando el framework industrial \textbf{Spring Boot} (versión 3.3.5) y el estándar de persistencia \textbf{Spring Data JPA} (Java Persistence API).
+
+\subsection{Ficha Técnica del Software}
+\begin{itemize}
+    \item \textbf{Fecha de Realización del Código:} 26 de enero de 2025 (Jan 26, 2025).
+    \item \textbf{Fecha de Evaluación Estática:} 1 de junio de 2026.
+    \item \textbf{Tecnología Base:} Java JDK 17.
+    \item \textbf{Gestor de Dependencias:} Apache Maven (incluyendo el Maven Wrapper \texttt{mvnw} para asegurar la portabilidad del ciclo de vida).
+    \item \textbf{Base de Datos Asignada:} MySQL / MariaDB (con generación automática de tablas mediante el valor \texttt{update} de la propiedad hibernate ddl-auto).
+\end{itemize}
+
+\subsection{Métricas de Tamaño Globales}
+Para obtener un panorama inicial de la envergadura del software, se ejecutaron scripts automatizados para el conteo de elementos estructurales:
+\begin{itemize}
+    \item \textbf{Número total de ficheros analizados:} 54 archivos con extensión \texttt{.java} (53 en el código de producción principal y 1 dedicado a pruebas unitarias).
+    \item \textbf{Líneas de Código Totales (LOC):} 3.234 líneas físicas de código fuente Java.
+\end{itemize}
+
+\subsection{Arquitectura y Estructura por Capas}
+El proyecto adopta un patrón arquitectónico multicapa (N-Tier Architecture), diseñado con el objetivo de separar de forma limpia las responsabilidades del sistema. A continuación se desglosan las capas identificadas en la ruta \texttt{es.uvigo.dagss.recetas.*}:
+
+\begin{enumerate}
+    \item \textbf{Capa de Dominio / Modelo (\texttt{entidades}):} Contiene 14 ficheros. Define los objetos de negocio del dominio (como \texttt{Paciente}, \texttt{Medico}, \texttt{Cita}, \texttt{Receta}, \texttt{Farmacia}, etc.) mapeados a tablas relacionales de base de datos.
+    \begin{itemize}
+        \item \textbf{Nota de Calidad (Lombok):} Las entidades utilizan las anotaciones de metaprogramación de Lombok (como \texttt{@Data} y \texttt{@EqualsAndHashCode}). Esto beneficia enormemente al análisis estático al reducir el código redundante (boilerplate). Los getters, setters, constructores y métodos \texttt{equals/hashCode} se inyectan en tiempo de compilación directamente en el bytecode, lo que ahorra la escritura manual de cientos de líneas propensas a errores, manteniendo el código fuente Java sumamente limpio y mantenible.
+    \end{itemize}
+    \item \textbf{Capa de Persistencia (\texttt{daos}):} Contiene 9 interfaces. Implementa las operaciones CRUD (Create, Read, Update, Delete) sobre la base de datos extendiendo la interfaz genérica \texttt{JpaRepository} de Spring Data. Al ser interfaces puras, delegan su implementación al framework en tiempo de ejecución, lo que reduce a cero las alertas de complejidad en esta capa.
+    \item \textbf{Capa de Negocio / Servicios (\texttt{servicios}):} Contiene 18 ficheros organizados en interfaces e implementaciones (\texttt{*ServiceImpl}). Aquí se procesan todas las reglas de negocio de la aplicación médica (gestión de recetas, asignación de citas, validación de estado de recetas).
+    \item \textbf{Capa de Controladores (\texttt{controladores}):} Contiene 7 controladores REST y 3 clases para la gestión de excepciones en la subcarpeta \texttt{excepciones}. Su función es exponer los endpoints HTTP en formato JSON e interceptar las peticiones del cliente web.
+    \item \textbf{Capa de Pruebas (\texttt{src/test}):} Contiene \texttt{RecetasApplicationTests.java}, dedicado a verificar el correcto arranque del contexto de la aplicación de Spring Boot.
+\end{enumerate}
+
+\newpage
+
+% =========================================================================
+% SECCIÓN 2: INTRODUCCIÓN Y OBJETIVOS
+% =========================================================================
+\section{Introducción y Objetivos}
+Esta memoria técnica documenta los resultados y la metodología empleados para realizar el análisis estático de código del proyecto \textbf{ProyectoDAGGS}.
+
+\subsection{Objetivos Académicos y Profesionales}
+\begin{itemize}
+    \item \textbf{Comprensión Teórica:} Profundizar en los fundamentos del análisis estático de software y en cómo sus hallazgos se mapean de manera cuantitativa y cualitativa con el estándar internacional de calidad de software \textbf{ISO/IEC 25000}.
+    \item \textbf{Uso de Herramientas Estándar:} Configurar, ejecutar y personalizar la herramienta de código abierto \textbf{PMD} en un proyecto real.
+    \item \textbf{Evaluación de la Mantenibilidad y Seguridad:} Identificar patrones de diseño ineficientes, código muerto y posibles riesgos de seguridad criptográfica en el backend, planteando soluciones y refactorizaciones basadas en arquitectura de software avanzada.
+\end{itemize}
+
+\subsection{Marco Teórico: Análisis Estático e ISO/IEC 25000}
+El análisis estático es una técnica de aseguramiento de calidad (QA) que examina el código fuente sin su ejecución, permitiendo detectar fallos en fases tempranas de desarrollo, donde el coste de reparación es sustancialmente menor.
+
+Los hallazgos de PMD se relacionan directamente con el modelo de calidad de producto definido por la norma **ISO/IEC 25000** (en particular la ISO/IEC 25010), la cual divide la calidad del producto en 8 características principales. En esta práctica centramos la evaluación en tres de ellas:
+\begin{itemize}
+    \item \textbf{Mantenibilidad (Maintainability):} Capacidad del producto software para ser modificado efectiva y eficientemente. Se evalúa a través de subcaracterísticas como la \textit{Modularidad}, la \textit{Analizabilidad}, la \textit{Modificabilidad} y la \textit{Capacidad de ser probado (Testability)}.
+    \item \textbf{Fiabilidad (Reliability):} Capacidad del sistema para realizar sus funciones en condiciones normales. Se relaciona con la \textit{Tolerancia a fallos}.
+    \item \textbf{Seguridad (Security):} Capacidad de proteger la información para que las personas o sistemas tengan el grado de acceso adecuado a sus datos. Evalúa la \textit{Confidencialidad}, \textit{Integridad} y \textit{Autenticidad}.
+\end{itemize}
+
+\newpage
+
+% =========================================================================
+% SECCIÓN 3: INSTALACIÓN E INTEGRACIÓN DE PMD
+% =========================================================================
+\section{Instalación e Integración de la Herramienta PMD}
+Para la realización de esta práctica, se ha descartado la instalación tradicional del software PMD en formato binario para consola local (CLI). En su lugar, se ha implementado una integración nativa en el flujo de desarrollo del proyecto utilizando el plugin de Maven: \textbf{Maven PMD Plugin} (versión 3.21.0).
+
+\subsection{Justificación Académica y Profesional de la Integración vía Maven}
+La elección del plugin de Maven frente al uso del binario CLI se fundamenta en las siguientes razones de ingeniería del software:
+\begin{enumerate}
+    \item \textbf{Estandarización del Pipeline:} En la industria moderna, el análisis de calidad no debe depender de que el desarrollador individual recuerde pasar una herramienta de forma externa. Integrarlo en Maven permite que el análisis estático sea agnóstico de la máquina de desarrollo y pueda automatizarse de manera transparente en un servidor de Integración Continua (como GitLab CI, Jenkins o GitHub Actions).
+    \item \textbf{Uniformidad en las Reglas de Negocio:} Todas las reglas se definen en un archivo \texttt{pmd-ruleset.xml} dentro de la raíz del proyecto. Cualquier desarrollador que clone el repositorio y ejecute \texttt{mvn pmd:pmd} obtendrá exactamente los mismos resultados, eliminando variaciones por diferencias de versión en ejecutables locales.
+    \item \textbf{Construcción Modular del Proyecto:} Al estar vinculado a Maven, el plugin accede automáticamente a los paths de compilación del proyecto, las dependencias de terceros y las clases compiladas, lo que permite realizar comprobaciones de tipo cruzadas y análisis sintáctico más precisos sobre código estructurado.
+\end{enumerate}
+
+\subsection{Configuración en pom.xml}
+El plugin se ha configurado bajo la sección \texttt{<build><plugins>} de la siguiente manera:
+\begin{lstlisting}[language=XML]
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-pmd-plugin</artifactId>
+    <version>3.21.0</version>
+    <configuration>
+        <linkXRef>false</linkXRef>
+        <sourceEncoding>UTF-8</sourceEncoding>
+        <targetJdk>17</targetJdk>
+        <rulesets>
+            <ruleset>${project.basedir}/pmd-ruleset.xml</ruleset>
+        </rulesets>
+        <includeTests>false</includeTests>
+        <failOnViolation>false</failOnViolation>
+    </configuration>
+</plugin>
+\end{lstlisting}
+
+\newpage
+
+% =========================================================================
+% SECCIÓN 4: ELECCIÓN DE MÉTRICAS Y JUSTIFICACIÓN (ISO 25000)
+% =========================================================================
+\section{Elección de Métricas y Justificación (ISO 25000)}
+El archivo de reglas personalizado \texttt{pmd-ruleset.xml} se ha creado para evitar la saturación de alertas de estilo secundarias (como comentarios vacíos) y centrar el análisis en aquellas métricas críticas para la Mantenibilidad, la Fiabilidad y la Seguridad de la aplicación.
+
+A continuación se detalla la justificación y correspondencia de las reglas importadas en nuestro archivo de reglas frente a las características de la norma \textbf{ISO/IEC 25000}:
+
+\begin{longtable}{p{2.2cm} p{4.2cm} p{4.0cm} p{4.0cm}}
+\caption{Mapeo de Reglas Seleccionadas de PMD con la Norma ISO/IEC 25000} \label{tab:rules_iso}\\
+\toprule
+\textbf{Categoría PMD} & \textbf{Regla de PMD} & \textbf{Características ISO 25000} & \textbf{Justificación del Impacto de Calidad} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}%
+{{\bfseries \tablename\ \thetable{} -- continuación de página anterior}} \\
+\toprule
+\textbf{Categoría PMD} & \textbf{Regla de PMD} & \textbf{Características ISO 25000} & \textbf{Justificación del Impacto de Calidad} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
+
+\textbf{Best Practices} & 
+\texttt{UnusedPrivateMethod} \newline
+\texttt{UnusedPrivateField} \newline
+\texttt{UnusedLocalVariable} & 
+\textbf{Mantenibilidad} (Analizabilidad y Modificabilidad) & 
+El ``código muerto'' incrementa el tamaño físico del software de forma innecesaria. Genera confusión conceptual al leer el código y eleva la fatiga cognitiva del desarrollador durante el mantenimiento diario. \\
+\midrule
+
+\textbf{Best Practices} & 
+\texttt{AvoidReassigning}\newline\texttt{Parameters} & 
+\textbf{Fiabilidad} (Tolerancia a fallos) y \textbf{Mantenibilidad} & 
+Evita la alteración del flujo de datos inicial. Reasignar variables pasadas por parámetro suele provocar efectos secundarios imprevistos y dificulta las trazas de depuración de errores. \\
+\midrule
+
+\textbf{Design} & 
+\texttt{CyclomaticComplexity} & 
+\textbf{Mantenibilidad} (Capacidad de prueba y Analizabilidad) & 
+Limita la bifurcación lógica. Métodos muy complejos (McCabe > 10) requieren una alta cantidad de casos de prueba para cubrir todas las ramas lógicas, haciendo el código inestable. \\
+\midrule
+
+\textbf{Design} & 
+\texttt{ExcessiveMethodLength} \newline
+\texttt{ExcessiveClassLength} & 
+\textbf{Mantenibilidad} (Modularidad y Cohesión) & 
+Obliga a seguir el Principio de Responsabilidad Única. Bloques gigantes de código son muy difíciles de refactorizar, comprender y reutilizar de forma limpia. \\
+\midrule
+
+\textbf{Error Prone} & 
+\texttt{EmptyCatchBlock} & 
+\textbf{Fiabilidad} (Tolerancia a fallos y Recuperabilidad) & 
+Silenciar excepciones interceptadas impide que el software gestione de manera elegante un comportamiento anómalo de runtime, ocultando fallos críticos del sistema. \\
+\midrule
+
+\textbf{Performance} & 
+\texttt{StringInstantiation} \newline
+\texttt{UseStringBufferFor}\newline\texttt{StringAppends} & 
+\textbf{Eficiencia de Desempeño} (Utilización de recursos) & 
+Evita la sobrecarga de memoria heap debida a la instanciación innecesaria de objetos en bucles, reduciendo el trabajo del recolector de basura de la máquina virtual (JVM). \\
+\midrule
+
+\textbf{Security} & 
+\texttt{InsecureCryptoIv} & 
+\textbf{Seguridad} (Confidencialidad e Integridad) & 
+Advierte sobre vectores de inicialización fijos o predecibles que facilitan ataques criptográficos de repetición. \\
+\midrule
+
+\textbf{Security} & 
+\texttt{HardCodedCryptoKey} & 
+\textbf{Seguridad} (Confidencialidad y Autenticidad) & 
+Evita que claves de acceso, contraseñas o firmas simétricas se almacenen expuestas en texto plano dentro de la base de código compilado. \\
+\end{longtable}
+
+\newpage
+
+% =========================================================================
+% SECCIÓN 5: SECUENCIA DE COMANDOS EJECUTADOS
+% =========================================================================
+\section{Secuencia de Comandos Ejecutados}
+Para garantizar la validez del análisis estático, la ejecución se llevó a cabo utilizando comandos estructurados de Maven en una terminal powershell del sistema operativo Windows:
+
+\begin{enumerate}
+    \item \textbf{Limpieza de Artefactos de Construcción Anteriores y Compilación:}
+    Este comando elimina cualquier compilado desfasado en el directorio \texttt{target} y recompila todas las clases Java bajo las configuraciones activas del compilador, asegurando que PMD trabaje con el código actualizado.
+    \begin{lstlisting}[language=bash]
+    .\mvnw.cmd clean compile
+    \end{lstlisting}
+    
+    \item \textbf{Ejecución de PMD y Generación de Reportes:}
+    Se invoca al goal \texttt{pmd} del plugin de Maven, el cual compila internamente la configuración definida en \texttt{pmd-ruleset.xml}, genera el AST y evalúa las clases compiladas de producción (bajo \texttt{src/main/java}).
+    \begin{lstlisting}[language=bash]
+    .\mvnw.cmd pmd:pmd
+    \end{lstlisting}
+    
+    \item \textbf{Localización de Reportes:}
+    El análisis genera de forma automática dos reportes de salida localizados en:
+    \begin{itemize}
+        \item \textbf{Reporte XML:} \texttt{target/pmd.xml} (estructurado para análisis automatizado de herramientas de integración).
+        \item \textbf{Reporte HTML:} \texttt{target/site/pmd.html} (diseñado para visualización del programador mediante hojas de estilo Maven).
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+
+% =========================================================================
+% SECCIÓN 6: LISTADO DE ERRORES DETECTADOS Y MAPEO CON ISO/IEC 25000
+% =========================================================================
+\section{Listado de Errores Detectados y Mapeo con ISO/IEC 25000}
+La ejecución de la herramienta PMD arrojó un total de 5 tipos de violaciones representativas distribuidas en diferentes clases del proyecto. A continuación se expone un desglose en profundidad de cada una de ellas, analizando su importancia en relación con la calidad del producto software y su mapeo explícito con las características de la norma ISO/IEC 25000.
+
+% ---------------------------------------------------------
+% ERROR 1: UnusedPrivateMethod
+% ---------------------------------------------------------
+\subsection{A. Tipo de Violación: \texttt{UnusedPrivateMethod} (Categoría: Best Practices)}
+\begin{itemize}
+    \item \textbf{Localización:} \texttt{RecetasApplication.java}, Línea 75 (método \texttt{crearEntidades()}).
+    \item \textbf{Nivel de Importancia / Severidad:} Priority 3 (Medium).
+    \item \textbf{Descripción del Fallo:} El analizador estático detectó que el método privado \texttt{crearEntidades()} de la clase de inicio de Spring Boot no es referenciado ni invocado en ningún punto ejecutable de la clase ni del resto del proyecto.
+\end{itemize}
+
+\begin{lstlisting}[language=Java, caption={Fragmento de código en RecetasApplication.java con llamadas comentadas}]
+	@Override
+	public void run(String... args) throws Exception {
+		// eliminarEntidades();
+		// crearEntidades();
+		// listarEntidades();
+	}
+\end{lstlisting}
+
+\subsubsection{Mapeo y Justificación bajo ISO/IEC 25000}
+\begin{itemize}
+    \item \textbf{Característica de Calidad:} \textbf{Mantenibilidad} (Subcaracterísticas: \textit{Analizabilidad} y \textit{Modificabilidad}).
+    \item \textbf{Justificación Técnica:} La existencia de código muerto (métodos, variables o clases que no se usan) atenta directamente contra la mantenibilidad del sistema. Aumenta de manera innecesaria el volumen físico de código a leer por los desarrolladores que asumen el proyecto, lo que degrada la \textit{analizabilidad} (el tiempo necesario para diagnosticar el impacto de un cambio). También afecta a la \textit{modificabilidad}, ya que introduce ambigüedad lógica: da la falsa impresión de que las entidades se están poblando en base de datos al arrancar el backend, cuando en realidad la llamada está comentada en la función ejecutable \texttt{run()}.
+    \item \textbf{Acción de Refactorización:} Si el método \texttt{crearEntidades()} ya no es necesario, debe eliminarse de forma definitiva del código. Si se desea usar para fases de depuración y testing local, debe descomentarse explícitamente en el método ejecutable \texttt{run()}.
+\end{itemize}
+
+\newpage
+
+% ---------------------------------------------------------
+% ERROR 2: ExcessiveMethodLength
+% ---------------------------------------------------------
+\subsection{B. Tipo de Violación: \texttt{ExcessiveMethodLength} (Categoría: Design)}
+\begin{itemize}
+    \item \textbf{Localización:} \texttt{RecetasApplication.java}, Líneas 75-187 (método \texttt{crearEntidades()}).
+    \item \textbf{Nivel de Importancia / Severidad:} Priority 3 (Medium).
+    \item \textbf{Descripción del Fallo:} El método \texttt{crearEntidades()} cuenta con una extensión física de 112 líneas de código, superando el umbral de 60 líneas configurado en el archivo de reglas.
+\end{itemize}
+
+\subsubsection{Mapeo y Justificación bajo ISO/IEC 25000}
+\begin{itemize}
+    \item \textbf{Característica de Calidad:} \textbf{Mantenibilidad} (Subcaracterísticas: \textit{Modularidad} y \textit{Capacidad de prueba / Testability}).
+    \item \textbf{Justificación Técnica:} Métodos excesivamente largos violan el principio de modularidad. Un método de 112 líneas encargado de instanciar y persistir en la base de datos nueve tipos distintos de objetos (médicos, recetas, pacientes, citas, etc.) sufre de baja cohesión y asume demasiadas responsabilidades que deberían estar distribuidas. Esto destruye la \textit{capacidad de prueba (testability)} debido a que no es posible realizar un test unitario aislado para comprobar la inserción de un elemento sin disparar la creación forzada de todos los demás elementos relacionados.
+    \item \textbf{Acción de Refactorización:} Se debe fraccionar el método largo mediante la técnica de extracción de métodos (Extract Method), dividiendo la lógica en sub-funciones altamente cohesivas y especializadas como \texttt{cargarPacientes()}, \texttt{cargarMedicos()} y \texttt{cargarRecetas()}, o delegar esta responsabilidad de inicialización de datos a un servicio dedicado (ej. \texttt{DataInitializerService}).
+\end{itemize}
+
+\newpage
+
+% ---------------------------------------------------------
+% ERROR 3: CyclomaticComplexity
+% ---------------------------------------------------------
+\subsection{C. Tipo de Violación: \texttt{CyclomaticComplexity} (Categoría: Design)}
+\begin{itemize}
+    \item \textbf{Localización:} \texttt{PacienteController.java}, Líneas 175-231 (método \texttt{crear(Paciente)}).
+    \item \textbf{Nivel de Importancia / Severidad:} Priority 3 (Medium).
+    \item \textbf{Descripción del Fallo:} El método \texttt{crear(Paciente)} de la API REST presenta una complejidad ciclomática de \textbf{32}, valor que sobrepasa de forma alarmante el límite máximo aconsejable de 10.
+\end{itemize}
+
+\begin{lstlisting}[language=Java, caption={Fragmento de validaciones manuales en PacienteController.java}]
+        if(nombre == null || nombre.isBlank()) {
+            throw new WrongParameterException("Falta indicar nombre");
+        }
+        if(apellidos == null || apellidos.isBlank()) {
+            throw new WrongParameterException("Falta indicar apellidos");
+        }
+        // ... (se repite para 12 atributos más)
+\end{lstlisting}
+
+\subsubsection{Mapeo y Justificación bajo ISO/IEC 25000}
+\begin{itemize}
+    \item \textbf{Característica de Calidad:} \textbf{Mantenibilidad} (Subcaracterísticas: \textit{Capacidad de prueba / Testability} y \textit{Analizabilidad}).
+    \item \textbf{Justificación Técnica:} La complejidad ciclomática de McCabe se define matemáticamente como:
+    \begin{equation}
+        V(G) = E - N + 2P
+    \end{equation}
+    Donde $E$ representa las aristas del grafo de control, $N$ los nodos de decisión y $P$ las componentes conectadas. En este método, el desarrollador implementó validaciones manuales e imperativas para 12 propiedades de la clase \texttt{Paciente} utilizando múltiples condicionales encadenados con operadores OR (\texttt{||}). Cada sentencia \texttt{if} y cada operador lógico introduce un nuevo camino de decisión lógica.
+    
+    Una complejidad de 32 significa que el método posee 32 ramas de ejecución independientes. Esto impacta de forma crítica en la \textit{capacidad de prueba}, ya que el desarrollador requeriría escribir un mínimo de 32 escenarios de test unitarios únicos para lograr una cobertura completa de las rutas del método. Asimismo, degrada la \textit{analizabilidad} al requerir un gran esfuerzo de lectura para comprender la lógica del controlador.
+    
+    \item \textbf{Acción de Refactorización (Recomendación de Arquitectura Spring):} El controlador está asumiendo lógica de validación que le pertenece al modelo. Para solucionarlo limpiamente y reducir la complejidad del controlador a \textbf{1}:
+    \begin{enumerate}
+        \item Mover las reglas de validación al modelo \texttt{Paciente.java} de manera declarativa con las anotaciones de **Jakarta Bean Validation**:
+        \begin{lstlisting}[language=Java]
+        @NotBlank(message = "El nombre es obligatorio")
+        private String nombre;
+        @NotBlank(message = "Los apellidos son obligatorios")
+        private String apellidos;
+        \end{lstlisting}
+        \item Eliminar por completo los bloques \texttt{if} manuales en el controlador y conservar el parámetro del endpoint anotado con \texttt{@Valid}:
+        \begin{lstlisting}[language=Java]
+        public ResponseEntity<Paciente> crear(@Valid @RequestBody Paciente paciente) {
+            Paciente nuevoPaciente = pacienteService.crear(paciente);
+            return ResponseEntity.created(uri).body(nuevoPaciente);
+        }
+        \end{lstlisting}
+    \end{enumerate}
+\end{itemize}
+
+\newpage
+
+% ---------------------------------------------------------
+% ERROR 4: InsecureCryptoIv
+% ---------------------------------------------------------
+\subsection{D. Tipo de Violación: \texttt{InsecureCryptoIv} (Categoría: Security)}
+\begin{itemize}
+    \item \textbf{Localización:} \texttt{Usuario.java}, Línea 164 (método \texttt{getCipherIv()}).
+    \item \textbf{Nivel de Importancia / Severidad:} Priority 3 (Medium).
+    \item \textbf{Descripción del Fallo:} El método \texttt{getCipherIv()} instancia un vector de inicialización (IV) criptográfico utilizando un array de bytes estático y predecible relleno de ceros de forma fija (\texttt{new byte[] \{ 0, 0, ... \}}) en lugar de emplear un mecanismo aleatorio dinámico.
+\end{itemize}
+
+\begin{lstlisting}[language=Java, caption={Uso de IV cableado en Usuario.java}]
+	public javax.crypto.spec.IvParameterSpec getCipherIv() {
+		return new javax.crypto.spec.IvParameterSpec(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+	}
+\end{lstlisting}
+
+\subsubsection{Mapeo y Justificación bajo ISO/IEC 25000}
+\begin{itemize}
+    \item \textbf{Característica de Calidad:} \textbf{Seguridad} (Subcaracterísticas: \textit{Confidencialidad} e \textit{Integridad}).
+    \item \textbf{Justificación Técnica:} El vector de inicialización es fundamental en algoritmos de cifrado simétrico (como AES trabajando en modos de bloque encadenado como CBC). Su propósito es asegurar que bloques de texto plano idénticos produzcan bloques de texto cifrado completamente diferentes.
+    
+    El uso de un IV estático compuesto enteramente de ceros atenta directamente contra la \textit{confidencialidad}. Facilita a un atacante en red interceptar y descifrar la información mediante ataques de frecuencia y diccionarios, ya que textos planos coincidentes resultarán en patrones idénticos en el canal cifrado. Esto compromete la privacidad de las contraseñas e información del usuario de acuerdo a los requisitos de seguridad de la ISO 25000.
+    
+    \item \textbf{Acción de Refactorización:} El vector de inicialización debe generarse de manera dinámica y aleatoria por cada operación de cifrado usando un generador criptográficamente seguro:
+    \begin{lstlisting}[language=Java]
+    public byte[] generarIvSeguro() {
+        byte[] ivBytes = new byte[16];
+        java.security.SecureRandom random = new java.security.SecureRandom();
+        random.nextBytes(ivBytes);
+        return ivBytes;
+    }
+    \end{lstlisting}
+\end{itemize}
+
+\newpage
+
+% ---------------------------------------------------------
+% ERROR 5: HardCodedCryptoKey
+% ---------------------------------------------------------
+\subsection{E. Tipo de Violación: \texttt{HardCodedCryptoKey} (Categoría: Security)}
+\begin{itemize}
+    \item \textbf{Localización:} \texttt{Usuario.java}, Líneas 168-169 (método \texttt{getCipherKey()}).
+    \item \textbf{Nivel de Importancia / Severidad:} Priority 3 (Medium).
+    \item \textbf{Descripción del Fallo:} El método \texttt{getCipherKey()} define directamente una clave simétrica AES cableada en el código (\texttt{keyBytes} con valores fijos \texttt{0x01, 0x02, ...}) para instanciar un objeto \texttt{SecretKeySpec}.
+\end{itemize}
+
+\begin{lstlisting}[language=Java, caption={Clave criptográfica grabada en el código fuente}]
+	public javax.crypto.spec.SecretKeySpec getCipherKey() {
+		byte[] keyBytes = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13,
+				0x14, 0x15, 0x16 };
+		return new javax.crypto.spec.SecretKeySpec(keyBytes, "AES");
+	}
+\end{lstlisting}
+
+\subsubsection{Mapeo y Justificación bajo ISO/IEC 25000}
+\begin{itemize}
+    \item \textbf{Característica de Calidad:} \textbf{Seguridad} (Subcaracterísticas: \textit{Confidencialidad} y \textit{Autenticidad}).
+    \item \textbf{Justificación Técnica:} Mantener llaves de encriptación dentro de archivos de código fuente compromete de manera absoluta la seguridad del sistema. Cuando el código se compila, estas constantes numéricas se graban en texto plano en los archivos binarios \texttt{.class}. Cualquier persona con acceso al ejecutable final (como el archivo ejecutable \texttt{.jar}) puede extraer la clave simétrica usando herramientas sencillas de descompilación de bytecode (ej. JD-GUI, Jadx o Procyon). 
+    
+    De acuerdo con la norma ISO 25000, para garantizar la \textit{confidencialidad}, las claves deben ser inaccesibles. Si la clave queda expuesta en el repositorio, la autenticidad e integridad de todos los datos cifrados con ella se pierden instantáneamente, permitiendo a terceros manipular o descifrar información sensible.
+    
+    \item \textbf{Acción de Refactorización:} Se debe eliminar la clave estática del código. En su lugar, se debe utilizar un almacén de claves del sistema (como **Java KeyStore - JKS**), o inyectarla en tiempo de ejecución mediante variables de entorno del sistema operativo protegidas o un gestor de secretos especializado como **HashiCorp Vault** o **Spring Cloud Config Server**.
+\end{itemize}
+
+\newpage
+
+% =========================================================================
+% SECCIÓN 7: CONCLUSIÓN
+% =========================================================================
+\section{Conclusión}
+La evaluación del proyecto \textbf{ProyectoDAGGS} empleando la herramienta de análisis estático **PMD** ha demostrado que este enfoque es sumamente efectivo para medir y mejorar la calidad estructural y de seguridad de un software de manera objetiva e independiente de la subjetividad humana.
+
+El análisis ha desvelado que, si bien la arquitectura general es limpia y modular, existen antipatrones de diseño y seguridad críticos:
+\begin{itemize}
+    \item \textbf{Antipatrón en Controladores:} Fuga de responsabilidades de validación hacia la capa web, elevando la complejidad ciclomática de McCabe a niveles críticos de inestabilidad y dificultad de pruebas.
+    \item \textbf{Antipatrón en Seguridad:} Criptografía débil y fijos temporales (IVs y claves hardcodeadas) en el núcleo de usuarios, invalidando los requisitos de protección de la ISO 25000.
+\end{itemize}
+
+La resolución de estos fallos mediante la refactorización a validaciones declarativas basadas en anotaciones de Java y el uso de generadores criptográficos fuertes, no solo soluciona los problemas puntuales detectados, sino que incrementa sustancialmente la madurez global del proyecto. El análisis estático de código debe consolidarse como un paso preventivo indispensable y automatizado en todo proceso formal de desarrollo de software que aspire a cumplir con los máximos niveles de calidad internacionales.
+
+\end{document}

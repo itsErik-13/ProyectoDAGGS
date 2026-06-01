@@ -108,6 +108,21 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.21.0</version>
+				<configuration>
+					<linkXRef>false</linkXRef>
+					<sourceEncoding>UTF-8</sourceEncoding>
+					<targetJdk>17</targetJdk>
+					<rulesets>
+						<ruleset>${project.basedir}/pmd-ruleset.xml</ruleset>
+					</rulesets>
+					<includeTests>false</includeTests>
+					<failOnViolation>false</failOnViolation>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
